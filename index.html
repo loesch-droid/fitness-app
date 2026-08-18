@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My Daily Fitness Plan</title>
+
+  <!-- PWA manifest -->
+  <link rel="manifest" href="manifest.json">
+
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 16px; background: #111; color: #f5f5f5; }
+    h1 { margin-bottom: 8px; }
+    h2 { margin-top: 24px; margin-bottom: 8px; }
+    .section { margin-bottom: 24px; padding: 12px; border-radius: 8px; background: #1c1c1c; }
+    button { padding: 8px 14px; margin: 4px; border-radius: 6px; border: none; cursor: pointer; font-size: 14px; }
+    .primary { background: #2e7d32; color: #fff; }
+    .secondary { background: #424242; color: #fff; }
+    .danger { background: #c62828; color: #fff; }
+    .card { background: #212121; padding: 10px; border-radius: 8px; margin-top: 8px; }
+    .row { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
+    .small { font-size: 12px; color: #bdbdbd; }
+  </style>
+</head>
+
+<body>
+  <h1>My Daily Fitness Plan</h1>
+  <div class="small">Adaptive military calisthenics • Weight loss • Referee workload aware</div>
+
+  <!-- TODAY'S WORKOUT -->
+  <div class="section" id="workoutSection">
+    <h2>Today's Workout</h2>
+    <div id="workout"></div>
+  </div>
+
+  <!-- WEEKEND MATCH QUESTION -->
+  <div class="section">
+    <h2>Weekend Match Check</h2>
+
+    <div class="small">Saturday</div>
+    <div class="row">
+      <button class="primary" onclick="setMatchDay('sat', true)">Yes, I have a match</button>
+      <button class="secondary" onclick="setMatchDay('sat', false)">No match today</button>
+    </div>
+
+    <div class="small" style="margin-top:12px;">Sunday</div>
+    <div class="row">
+      <button class="primary" onclick="setMatchDay('sun', true)">Yes, I have a match</button>
+      <button class="secondary" onclick="setMatchDay('sun', false)">No match today</button>
+    </div>
+
+    <div id="weekendStatus" class="small" style="margin-top:12px;"></div>
+  </div>
+
+  <!-- PLANK TIMER -->
+  <div class="section">
+    <h2>Plank Timer</h2>
+    <div id="plankTimeDisplay" class="small">Last plank: not recorded yet</div>
+    <div style="margin-top:8px;">
+      <span id="plankTimer">0s</span>
+    </div>
+    <div class="row">
+      <button class="primary" onclick="startPlank()">Start</button>
+      <button class="secondary" onclick="stopPlank()">Stop</button>
+    </div>
+  </div>
+
+  <!-- REFEREEING LOG -->
+  <div class="section">
+    <h2>Refereeing Log</h2>
+    <div class="small">Step 1: Role</div>
+    <div class="row">
+      <button class="secondary" onclick="setRole('Centre')">Centre</button>
+      <button class="secondary" onclick="setRole('AR')">Assistant Referee</button>
+    </div>
+
+    <div class="small" style="margin-top:8px;">Step 2: Duration</div>
+    <div class="row">
+      <button class="secondary" onclick="setDuration(50)">50 min</button>
+      <button class="secondary" onclick="setDuration(60)">60 min</button>
+      <button class="secondary" onclick="setDuration(70)">70 min</button>
+      <button class="secondary" onclick="setDuration(80)">80 min</button>
+      <button class="secondary" onclick="setDuration(90)">90 min</button>
+    </div>
+
+    <div class="small" id="selectionPreview" style="margin-top:8px;">
+      Selected: none
+    </div>
+
+    <button class="primary" style="margin-top:8px;" onclick="addGame()">Add Game</button>
+  </div>
+
+  <!-- GAMES TODAY -->
+  <div class="section">
+    <h2>Games Today</h2>
+    <div id="gamesList" class="small">No games logged yet.</div>
+    <div id="totalLoad" class="small" style="margin-top:8px;"></div>
+  </div>
+
+  <!-- EXERCISE EXPLANATIONS -->
+  <div class="section">
+    <h2>Exercise Explanations</h2>
+
+    <!-- List of exercise buttons -->
+    <div id="exerciseList">
+      <div class="row">
+        <button class="secondary" onclick="showExercise('mountain')">Mountain Climbers</button>
+        <button class="secondary" onclick="showExercise('jj')">Jumping Jacks</button>
+        <button class="secondary" onclick="showExercise('incline')">Incline Push-Ups</button>
+        <button class="secondary" onclick="showExercise('squat')">Squats</button>
+        <button class="secondary" onclick="showExercise('highknees')">High Knees</button>
+        <button class="secondary" onclick="showExercise('situps')">Sit-Ups</button>
+        <button class="secondary" onclick="showExercise('plank')">Plank</button>
+        <button class="secondary" onclick="showExercise('flutter')">Flutter Kicks</button>
+        <button class="secondary" onclick="showExercise('nopuburpee')">No-Push-Up Burpees</button>
+        <button class="secondary" onclick="showExercise('reverse')">Reverse Lunges</button>
+        <button class="secondary" onclick="showExercise('punches')">Punches</button>
+      </div>
+    </div>
+
+    <!-- Expanded explanation view -->
+    <div id="exerciseDetail" style="display:none;">
+      <div id="exerciseText" class="small" style="margin-bottom:12px;"></div>
+      <button class="primary" onclick="backToList()">Back</button>
+    </div>
+  </div>
+
+  <!-- SERVICE WORKER REGISTRATION -->
+  <script>
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("service-worker.js");
+    }
+  </script>
+
+  <!-- MAIN APP LOGIC -->
+  <script>
+    let plankInterval = null;
+    let plankSeconds = 0;
+    let lastPlankSeconds = null;
+
+    let selectedRole = null;
+    let selectedDuration = null;
+    const games = [];
+
+    let weekend = { satMatch: null, sunMatch: null };
+
+    function setMatchDay(day, hasMatch) {
+      if (day === 'sat') weekend.satMatch = hasMatch;
+      if (day === 'sun') weekend.sunMatch = hasMatch;
+      updateWeekendStatus();
+      updateWorkout();
+    }
+
+    function updateWeekendStatus() {
+      const status = document.getElementById('weekendStatus');
+      let sat = weekend.satMatch === null ? "Not set" : weekend.satMatch ? "Match Day" : "Training Day";
+      let sun = weekend.sunMatch === null ? "Not set" : weekend.sunMatch ? "Match Day" : "Training Day";
+      status.textContent = `Saturday: ${sat} • Sunday: ${sun}`;
+    }
+
+    function updateWorkout() {
+      const workoutDiv = document.getElementById('workout');
+      workoutDiv.innerHTML = '';
+      const today = new Date().getDay();
+
+      if (today === 1 && weekend.satMatch && weekend.sunMatch) {
+        workoutDiv.innerHTML = `
+          <div>Double Match Weekend Detected — Monday Rest Enforced.</div>
+          <div>Light mobility only.</div>
+        `;
+        return;
+      }
+
+      if (today === 6 && weekend.satMatch) return loadMatchDayWorkout();
+      if (today === 0 && weekend.sunMatch) return loadMatchDayWorkout();
+      if (today === 6 && weekend.satMatch === false) return loadSaturdayTraining();
+      if (today === 0 && weekend.sunMatch === false) return loadSundayTraining();
+
+      loadWeeklyWorkout(today);
+    }
+
+    function loadWeeklyWorkout(day) {
+      const workoutDiv = document.getElementById('workout');
+      const items = [];
+
+      if (day === 2) {
+        items.push("Tuesday — Full Body Fat Burn (3–4 rounds):");
+        items.push("15 Jumping Jacks");
+        items.push("8 Incline Push-Ups");
+        items.push("10 Squats");
+        items.push("20 High Knees");
+        items.push("Rest 45 seconds between rounds");
+      }
+
+      if (day === 3) {
+        items.push("Wednesday — Core & Stamina (3–4 rounds):");
+        items.push("10 Sit-Ups");
+        items.push("15-second Plank");
+        items.push("12 Flutter Kicks");
+        items.push("20 Mountain Climbers");
+        items.push("Rest 45 seconds between rounds");
+      }
+
+      if (day === 4) {
+        items.push("Thursday — Metabolic HIIT (3–4 rounds):");
+        items.push("5 No-Push-Up Burpees");
+        items.push("10 Reverse Lunges");
+        items.push("15 Punches");
+        items.push("15 Jumping Jacks");
+        items.push("Rest 45 seconds between rounds");
+      }
+
+      if (day === 5) {
+        items.push("Friday — Pre-Match Primer (2–3 rounds):");
+        items.push("10 Jumping Jacks");
+        items.push("5 Incline Push-Ups");
+        items.push("10-second Plank");
+        items.push("Full Stretching Routine");
+        items.push("Friday Lock Active — keep legs fresh");
+      }
+
+      if (items.length === 0) {
+        items.push("Monday — Rest Day");
+        items.push("Light mobility only");
+      }
+
+      workoutDiv.innerHTML = items.map(i => `<div>${i}</div>`).join("");
+    }
+
+    function loadMatchDayWorkout() {
+      document.getElementById('workout').innerHTML = `
+        <div>Match Day: No additional training required.</div>
+        <div>Hydration reminder: Drink water + electrolytes.</div>
+      `;
+    }
+
+    function loadSaturdayTraining() {
+      document.getElementById('workout').innerHTML = `
+        <div>Saturday Training (No Match):</div>
+        <div>15 Jumping Jacks</div>
+        <div>8 Incline Push-Ups</div>
+        <div>10 Squats</div>
+        <div>20 High Knees</div>
+        <div>Rest 45 seconds between rounds</div>
+      `;
+    }
+
+    function loadSundayTraining() {
+      document.getElementById('workout').innerHTML = `
+        <div>Sunday Recovery (No Match):</div>
+        <div>Passive recovery day</div>
+        <div>Gentle mobility only</div>
+        <div>Light stretching recommended</div>
+      `;
+    }
+
+    function showExercise(ex) {
+      const list = document.getElementById('exerciseList');
+      const detail = document.getElementById('exerciseDetail');
+      const text = document.getElementById('exerciseText');
+
+      const explanations = {
+        mountain: "Mountain Climbers: Start in a plank and rapidly drive your knees toward your chest one at a time.",
+        jj: "Jumping Jacks: Jump feet out while raising arms overhead.",
+        incline: "Incline Push-Ups: Hands on a bench or wall to reduce load.",
+        squat: "Squats: Bend knees and hips while keeping chest upright.",
+        highknees: "High Knees: Run in place while lifting knees high.",
+        situps: "Sit-Ups: Curl torso upward from the floor.",
+        plank: "Plank: Hold a straight-body position on forearms and toes.",
+        flutter: "Flutter Kicks: Kick legs up and down while lying on your back.",
+        nopuburpee: "No-Push-Up Burpees: Burpee variation without the push-up.",
+        reverse: "Reverse Lunges: Step backward into a lunge.",
+        punches: "Punches: Fast, controlled punches thrown in place."
+      };
+
+      text.textContent = explanations[ex];
+      list.style.display = "none";
+      detail.style.display = "block";
+    }
+
+    function backToList() {
+      document.getElementById('exerciseDetail').style.display = "none";
+      document.getElementById('exerciseList').style.display = "block";
+    }
+
+    function speak(text) {
+      if (!('speechSynthesis' in window)) return;
+      speechSynthesis.speak(new SpeechSynthesisUtterance(text));
+    }
+
+    function startPlank() {
+      if (plankInterval) return;
+      plankSeconds = 0;
+      document.getElementById('plankTimer').textContent = '0s';
+      speak('Plank timer started');
+
+      plankInterval = setInterval(() => {
+        plankSeconds++;
+        document.getElementById('plankTimer').textContent = plankSeconds + 's';
+
+        if (plankSeconds === 30) speak('Thirty seconds');
+        if (plankSeconds === 60) speak('One minute');
+        if (plankSeconds === 90) speak('Ninety seconds');
+        if (plankSeconds === 120) speak('Two minutes');
+        if (plankSeconds > 120 && plankSeconds % 30 === 0) speak(plankSeconds + ' seconds');
+      }, 1000);
+    }
+
+    function stopPlank() {
+      if (!plankInterval) return;
+      clearInterval(plankInterval);
+      plankInterval = null;
+      lastPlankSeconds = plankSeconds;
+      document.getElementById('plankTimeDisplay').textContent = 'Last plank: ' + plankSeconds + ' seconds';
+      speak('Plank finished at ' + plankSeconds + ' seconds');
+      updateWorkout();
+    }
+
+    function setRole(role) {
+      selectedRole = role;
+      updateSelectionPreview();
+    }
+
+    function setDuration(duration) {
+      selectedDuration = duration;
+      updateSelectionPreview();
+    }
+
+    function updateSelectionPreview() {
+      const preview = document.getElementById('selectionPreview');
+      preview.textContent = selectedRole && selectedDuration
+        ? `Selected: ${selectedRole} — ${selectedDuration} min`
+        : 'Selected: none';
+    }
+
+    function addGame() {
+      if (!selectedRole || !selectedDuration) {
+        alert('Please select role and duration first.');
+        return;
+      }
+      games.push({ role: selectedRole, duration: selectedDuration });
+      selectedRole = null;
+      selectedDuration = null;
+      updateSelectionPreview();
+      renderGames();
+      updateWorkout();
+    }
+
+    function renderGames() {
+      const list = document.getElementById('gamesList');
+      list.innerHTML = '';
+
+      if (games.length === 0) {
+        list.textContent = 'No games logged yet.';
+        document.getElementById('totalLoad').textContent = '';
+        return;
+      }
+
+      games.forEach((g, index) => {
+        const card = document.createElement('div');
+        card.className = 'card';
+
+        card.innerHTML = `
+          <div>${g.role} — ${g.duration} min</div>
+          <div class="small">
+            Load: ${calculateGameLoad(g.role, g.duration).toFixed(1)}
+            • Est. distance: ${estimateDistance(g.role, g.duration).toFixed(1)} km
+          </div>
+        `;
+
+        const delBtn = document.createElement('button');
+        delBtn.className = 'danger';
+        delBtn.textContent = 'Delete';
+        delBtn.onclick = () => {
+          games.splice(index, 1);
+          renderGames();
+          updateWorkout();
+        };
+
+        const btnRow = document.createElement('div');
+        btnRow.className = 'row';
+        btnRow.appendChild(delBtn);
+
+        card.appendChild(btnRow);
+        list.appendChild(card);
+      });
+
+      const total = calculateTotalFatigue();
+      let rec = total > 7 ? 'Recovery day' : total > 4 ? 'Medium day' : 'Hard day';
+
+      document.getElementById('totalLoad').textContent =
+        `Total refereeing load score: ${total.toFixed(1)} • Recommendation: ${rec}`;
+    }
+
+    function calculateGameLoad(role, duration) {
+      const roleScore = role === 'Centre' ? 4 : 2.5;
+      const durationScore = duration / 20;
+      return roleScore + durationScore;
+    }
+
+    function estimateDistance(role, duration) {
+      const base = role === 'Centre' ? 7 : 4;
+      return base * (duration / 90);
+    }
+
+    function calculateTotalFatigue() {
+      return games.reduce((sum, g) => sum + calculateGameLoad(g.role, g.duration), 0) / 2;
+    }
+
+    updateWeekendStatus();
+    updateWorkout();
+  </script>
+</body>
+</html>
