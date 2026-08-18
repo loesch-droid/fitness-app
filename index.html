@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <title>Referee Weekly Fitness Planner</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <style>
     :root {
       --bg: #0f172a;
@@ -245,339 +246,7 @@
       }
     }
 
-    .plank-card {
-      margin-bottom: 18px;
-    }
-
-    .plank-main-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-
-    .plank-timer-display {
-      font-size: 1.6rem;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      color: #f9fafb;
-    }
-
-    .plank-status {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      margin-top: 2px;
-    }
-
-    .plank-controls {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
-    .plank-stats-row {
-      margin-top: 10px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      font-size: 0.75rem;
-      color: var(--text-muted);
-    }
-
-    .plank-stat-pill {
-      padding: 5px 10px;
-      border-radius: var(--radius-pill);
-      border: 1px solid rgba(148, 163, 184, 0.4);
-      background: rgba(15, 23, 42, 0.9);
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .plank-stat-label {
-      color: var(--text-muted);
-    }
-
-    .plank-stat-value {
-      color: var(--accent-soft);
-      font-weight: 500;
-    }
-
-    .fade-group {
-      transition: opacity var(--transition-med), transform var(--transition-med);
-    }
-
-    .fade-hidden {
-      opacity: 0;
-      transform: translateY(4px);
-      pointer-events: none;
-    }
-
-    .fade-visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    .week-meta-card {
-      margin-bottom: 18px;
-    }
-
-    .meta-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      font-size: 0.75rem;
-      color: var(--text-muted);
-    }
-
-    .meta-pill {
-      padding: 5px 10px;
-      border-radius: var(--radius-pill);
-      border: 1px solid rgba(148, 163, 184, 0.4);
-      background: rgba(15, 23, 42, 0.9);
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .meta-label {
-      color: var(--text-muted);
-    }
-
-    .meta-value {
-      color: var(--accent-soft);
-      font-weight: 500;
-    }
-
-    .weekday-log-card {
-      margin-bottom: 18px;
-    }
-
-    .weekday-log-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 8px;
-    }
-
-    .weekday-select {
-      border-radius: var(--radius-pill);
-      border: 1px solid rgba(148, 163, 184, 0.4);
-      background: rgba(15, 23, 42, 0.9);
-      color: var(--text-main);
-      padding: 6px 10px;
-      font-size: 0.8rem;
-      outline: none;
-    }
-
-    .weekday-select:focus {
-      border-color: var(--accent-soft);
-    }
-
-    .weekday-log-list {
-      margin-top: 10px;
-      font-size: 0.75rem;
-      color: var(--text-muted);
-    }
-
-    .weekday-log-item {
-      margin-bottom: 4px;
-    }
-
-    .week-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .day-card {
-      background: radial-gradient(circle at top left, #1f2937 0, #020617 55%);
-      border-radius: var(--radius-card);
-      box-shadow: var(--shadow-elevated);
-      border: 1px solid rgba(148, 163, 184, 0.25);
-      overflow: hidden;
-      position: relative;
-    }
-
-    .day-header {
-      padding: 12px 14px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      cursor: pointer;
-      position: relative;
-    }
-
-    .day-header-main {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-
-    .day-name {
-      font-size: 0.85rem;
-      font-weight: 600;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: #e5e7eb;
-    }
-
-    .day-workout-title {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-    }
-
-    .day-status-pill {
-      padding: 4px 10px;
-      border-radius: var(--radius-pill);
-      border: 1px solid rgba(148, 163, 184, 0.4);
-      font-size: 0.7rem;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      color: var(--text-muted);
-    }
-
-    .day-status-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: var(--accent-soft);
-    }
-
-    .day-chevron {
-      width: 14px;
-      height: 14px;
-      fill: var(--text-muted);
-      transition: transform var(--transition-med);
-    }
-
-    .day-card.open .day-chevron {
-      transform: rotate(180deg);
-    }
-
-    .day-body {
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height var(--transition-slow), opacity var(--transition-med), transform var(--transition-med);
-      opacity: 0;
-      transform: translateY(-4px);
-      padding: 0 14px;
-    }
-
-    .day-card.open .day-body {
-      opacity: 1;
-      transform: translateY(0);
-      padding-bottom: 12px;
-    }
-
-    .day-body-inner {
-      padding-top: 6px;
-    }
-
-    .exercise-list {
-      list-style: none;
-      margin-top: 4px;
-    }
-
-    .exercise-item {
-      display: flex;
-      align-items: flex-start;
-      gap: 8px;
-      padding: 6px 0;
-      border-bottom: 1px solid rgba(30, 64, 175, 0.25);
-    }
-
-    .exercise-item:last-child {
-      border-bottom: none;
-    }
-
-    .exercise-icon {
-      width: 18px;
-      height: 18px;
-      flex-shrink: 0;
-      fill: var(--accent-soft);
-    }
-
-    .exercise-text-main {
-      font-size: 0.8rem;
-      color: var(--text-main);
-    }
-
-    .exercise-text-sub {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-    }
-
-    .day-footer-row {
-      margin-top: 8px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
-    .intensity-pill {
-      padding: 4px 10px;
-      border-radius: var(--radius-pill);
-      border: 1px solid rgba(148, 163, 184, 0.4);
-      font-size: 0.75rem;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      color: var(--text-muted);
-    }
-
-    .intensity-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: var(--accent-soft);
-    }
-
-    .completion-btn {
-      position: relative;
-      min-width: 140px;
-      justify-content: center;
-    }
-
-    .completion-check {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 0.8rem;
-      color: var(--accent-strong);
-    }
-
-    .completion-check-icon {
-      width: 16px;
-      height: 16px;
-      fill: var(--accent-strong);
-    }
-
-    .completion-fade-hidden {
-      opacity: 0;
-      transform: translateY(4px);
-      pointer-events: none;
-    }
-
-    .completion-fade-visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    .completion-fade-group {
-      transition: opacity var(--transition-med), transform var(--transition-med);
-    }
-
-    .footer-note {
-      margin-top: 16px;
-      font-size: 0.7rem;
-      color: var(--text-muted);
-      text-align: center;
-    }
+    /* Plank + Weekend + Week Overview + Weekday Log styling continues in Part 2 */
   </style>
 </head>
 <body>
@@ -600,15 +269,16 @@
         </div>
         <div class="pill">
           <span class="pill-dot"></span>
-          <span>Weekday games & training included</span>
+          <span>Weekend + Weekday load</span>
         </div>
       </div>
     </header>
 
     <main class="layout-grid">
-      <!-- LEFT: Plank + meta + weekday log -->
+      <!-- LEFT COLUMN -->
       <section>
-        <!-- Plank Timer Card -->
+
+        <!-- PLANK TIMER CARD -->
         <div class="card plank-card">
           <div class="card-header-row">
             <div class="card-title">Plank Timer</div>
@@ -617,12 +287,14 @@
               <span>Core strength · Live impact</span>
             </div>
           </div>
+
           <div class="card-body">
             <div class="plank-main-row">
               <div>
                 <div id="plankTimerDisplay" class="plank-timer-display">00:00</div>
                 <div id="plankStatus" class="plank-status">Ready when you are.</div>
               </div>
+
               <div class="plank-controls">
                 <button id="plankStartBtn" class="btn btn-primary ripple-container">
                   <svg class="btn-icon" viewBox="0 0 24 24">
@@ -630,6 +302,7 @@
                   </svg>
                   <span>Start Plank</span>
                 </button>
+
                 <button id="plankStopBtn" class="btn btn-outline ripple-container" disabled>
                   <svg class="btn-icon" viewBox="0 0 24 24">
                     <path d="M7 7h4v10H7zm6 0h4v10h-4z"></path>
@@ -644,23 +317,126 @@
                 <span class="plank-stat-label">Last plank:</span>
                 <span id="plankLast" class="plank-stat-value">–</span>
               </div>
+
               <div class="plank-stat-pill">
                 <span class="plank-stat-label">Best plank:</span>
                 <span id="plankBest" class="plank-stat-value">–</span>
               </div>
+
               <div class="plank-stat-pill">
                 <span class="plank-stat-label">Average plank:</span>
                 <span id="plankAverage" class="plank-stat-value">–</span>
               </div>
             </div>
           </div>
+
           <div class="card-footer">
             <span class="small-label">Impact:</span>
             <span class="small-value">Core · HIIT · Primer · Fatigue</span>
           </div>
         </div>
 
-        <!-- Week Meta Card -->
+        <!-- WEEKEND ACTIVITY CARD (NEW) -->
+        <div class="card weekend-card">
+          <div class="card-header-row">
+            <div class="card-title">Weekend Activity</div>
+            <div class="card-tag">
+              <span class="card-tag-dot"></span>
+              <span>Centre · AR · Training · Recovery · Rest</span>
+            </div>
+          </div>
+
+          <div class="card-body">
+
+            <!-- SATURDAY -->
+            <div class="weekend-day-block">
+              <div class="card-title" style="margin-bottom:6px;">Saturday</div>
+
+              <div class="weekend-row">
+                <label class="small-label">Centre Referee</label>
+                <input id="satCentre" type="number" min="0" max="4" value="0" class="weekday-select">
+              </div>
+
+              <div class="weekend-row">
+                <label class="small-label">Assistant Referee</label>
+                <input id="satAR" type="number" min="0" max="4" value="0" class="weekday-select">
+              </div>
+
+              <div class="weekend-row">
+                <label class="small-label">Training</label>
+                <input id="satTraining" type="number" min="0" max="4" value="0" class="weekday-select">
+              </div>
+
+              <div class="weekend-row">
+                <label class="small-label">Recovery</label>
+                <input id="satRecovery" type="number" min="0" max="4" value="0" class="weekday-select">
+              </div>
+
+              <div class="weekend-row">
+                <label class="small-label">Rest</label>
+                <input id="satRest" type="checkbox">
+              </div>
+
+              <button id="saveSaturdayBtn" class="btn btn-outline ripple-container" style="margin-top:10px;">
+                <svg class="btn-icon" viewBox="0 0 24 24">
+                  <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"></path>
+                </svg>
+                <span>Save Saturday</span>
+              </button>
+            </div>
+
+            <hr style="border-color:rgba(148,163,184,0.2);margin:12px 0;">
+
+            <!-- SUNDAY -->
+            <div class="weekend-day-block">
+              <div class="card-title" style="margin-bottom:6px;">Sunday</div>
+
+              <div class="weekend-row">
+                <label class="small-label">Centre Referee</label>
+                <input id="sunCentre" type="number" min="0" max="4" value="0" class="weekday-select">
+              </div>
+
+              <div class="weekend-row">
+                <label class="small-label">Assistant Referee</label>
+                <input id="sunAR" type="number" min="0" max="4" value="0" class="weekday-select">
+              </div>
+
+              <div class="weekend-row">
+                <label class="small-label">Training</label>
+                <input id="sunTraining" type="number" min="0" max="4" value="0" class="weekday-select">
+              </div>
+
+              <div class="weekend-row">
+                <label class="small-label">Recovery</label>
+                <input id="sunRecovery" type="number" min="0" max="4" value="0" class="weekday-select">
+              </div>
+
+              <div class="weekend-row">
+                <label class="small-label">Rest</label>
+                <input id="sunRest" type="checkbox">
+              </div>
+
+              <button id="saveSundayBtn" class="btn btn-outline ripple-container" style="margin-top:10px;">
+                <svg class="btn-icon" viewBox="0 0 24 24">
+                  <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"></path>
+                </svg>
+                <span>Save Sunday</span>
+              </button>
+            </div>
+
+            <div id="weekendLogList" class="weekday-log-list" style="margin-top:12px;">
+              <div class="weekday-log-item">No weekend activity logged yet.</div>
+            </div>
+
+          </div>
+
+          <div class="card-footer">
+            <span class="small-label">Impact:</span>
+            <span class="small-value">Centre + AR + Training + Recovery + Rest</span>
+          </div>
+        </div>
+
+        <!-- WEEK OVERVIEW CARD -->
         <div class="card week-meta-card">
           <div class="card-header-row">
             <div class="card-title">Week Overview</div>
@@ -669,33 +445,38 @@
               <span>Saturday → Friday cycle</span>
             </div>
           </div>
+
           <div class="card-body">
             <div class="meta-row">
               <div class="meta-pill">
                 <span class="meta-label">Fatigue:</span>
                 <span id="metaFatigue" class="meta-value">Low</span>
               </div>
+
               <div class="meta-pill">
                 <span class="meta-label">Matches this week:</span>
                 <span id="metaMatches" class="meta-value">0</span>
               </div>
+
               <div class="meta-pill">
                 <span class="meta-label">Training sessions:</span>
                 <span id="metaTraining" class="meta-value">0</span>
               </div>
+
               <div class="meta-pill">
                 <span class="meta-label">Plank influence:</span>
                 <span id="metaPlankImpact" class="meta-value">Neutral</span>
               </div>
             </div>
           </div>
+
           <div class="card-footer">
             <span class="small-label">Engine:</span>
             <span class="small-value">Match‑aware · Plank‑aware · Completion‑aware</span>
           </div>
         </div>
 
-        <!-- Weekday Game / Training Log Card -->
+        <!-- WEEKDAY GAME/TRAINING CARD -->
         <div class="card weekday-log-card">
           <div class="card-header-row">
             <div class="card-title">Weekday Game / Training</div>
@@ -704,6 +485,7 @@
               <span>Midweek load · Live impact</span>
             </div>
           </div>
+
           <div class="card-body">
             <div class="weekday-log-row">
               <select id="weekdaySelect" class="weekday-select">
@@ -714,12 +496,14 @@
                 <option value="Thursday">Thursday</option>
                 <option value="Friday">Friday</option>
               </select>
+
               <button id="weekdayGameBtn" class="btn btn-outline ripple-container">
                 <svg class="btn-icon" viewBox="0 0 24 24">
                   <path d="M5 5h14v14H5z"></path>
                 </svg>
                 <span>Add Game</span>
               </button>
+
               <button id="weekdayTrainingBtn" class="btn btn-outline ripple-container">
                 <svg class="btn-icon" viewBox="0 0 24 24">
                   <path d="M12 5l4 14H8z"></path>
@@ -727,18 +511,20 @@
                 <span>Add Training</span>
               </button>
             </div>
+
             <div id="weekdayLogList" class="weekday-log-list">
               <div class="weekday-log-item">No weekday sessions logged yet.</div>
             </div>
           </div>
+
           <div class="card-footer">
             <span class="small-label">Impact:</span>
             <span class="small-value">Adjusts recovery · intensity · fatigue</span>
           </div>
         </div>
-      </section>
 
-      <!-- RIGHT: Weekly planner -->
+      </section>
+      <!-- RIGHT COLUMN -->
       <section>
         <div class="card">
           <div class="card-header-row">
@@ -748,913 +534,182 @@
               <span>Tap a day · Ripple · Expand</span>
             </div>
           </div>
+
           <div class="card-body">
             <div id="weekGrid" class="week-grid">
               <!-- Day cards injected by JS -->
             </div>
           </div>
+
           <div class="card-footer">
             <span class="small-label">Note:</span>
-            <span class="small-value">Any plank, match, or training instantly recalculates the entire week.</span>
+            <span class="small-value">Any plank, weekend, weekday, or completion instantly recalculates the entire week.</span>
           </div>
         </div>
+
         <div class="footer-note">
           Completion uses a smooth fade: button → green checkmark · plan updates instantly.
         </div>
       </section>
     </main>
   </div>
-
-  <script>
-    // Core state
-    const state = {
-      fatigueScore: 0, // 0–100
-      matches: [],
-      trainingSessions: [],
-      weekdaySessions: [],
-      plankTimes: [],
-      lastPlank: null,
-      bestPlank: null,
-      averagePlank: null,
-      days: [
-        "Saturday",
-        "Sunday",
-        "Monday",
-        "Tuesday",
-        "Wednesday",
-        "Thursday",
-        "Friday"
-      ],
-      dayPlans: {},
-      completion: {}
-    };
-
-    // Utility: ripple
-    function attachRipple(el) {
-      el.addEventListener("click", function (e) {
-        const rect = el.getBoundingClientRect();
-        const ripple = document.createElement("span");
-        ripple.className = "ripple";
-        const size = Math.max(rect.width, rect.height);
-        ripple.style.width = ripple.style.height = size + "px";
-        ripple.style.left = e.clientX - rect.left - size / 2 + "px";
-        ripple.style.top = e.clientY - rect.top - size / 2 + "px";
-        el.appendChild(ripple);
-        ripple.addEventListener("animationend", () => {
-          ripple.remove();
-        });
-      });
-    }
-
-    // Utility: format seconds
-    function formatSeconds(sec) {
-      const m = Math.floor(sec / 60);
-      const s = sec % 60;
-      return `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
-    }
-
-    // Plank timer
-    let plankInterval = null;
-    let plankSeconds = 0;
-
-    const plankTimerDisplay = document.getElementById("plankTimerDisplay");
-    const plankStatus = document.getElementById("plankStatus");
-    const plankStartBtn = document.getElementById("plankStartBtn");
-    const plankStopBtn = document.getElementById("plankStopBtn");
-    const plankLast = document.getElementById("plankLast");
-    const plankBest = document.getElementById("plankBest");
-    const plankAverage = document.getElementById("plankAverage");
-
-    attachRipple(plankStartBtn);
-    attachRipple(plankStopBtn);
-
-    plankStartBtn.addEventListener("click", () => {
-      if (plankInterval) return;
-      plankSeconds = 0;
-      plankTimerDisplay.textContent = "00:00";
-      plankStatus.textContent = "Plank in progress...";
-      plankStartBtn.disabled = true;
-      plankStopBtn.disabled = false;
-      plankInterval = setInterval(() => {
-        plankSeconds++;
-        plankTimerDisplay.textContent = formatSeconds(plankSeconds);
-      }, 1000);
-    });
-
-    plankStopBtn.addEventListener("click", () => {
-      if (!plankInterval) return;
-      clearInterval(plankInterval);
-      plankInterval = null;
-      plankStartBtn.disabled = false;
-      plankStopBtn.disabled = true;
-
-      const time = plankSeconds;
-      state.plankTimes.push(time);
-      state.lastPlank = time;
-      state.bestPlank = Math.max(...state.plankTimes);
-      state.averagePlank =
-        state.plankTimes.reduce((a, b) => a + b, 0) / state.plankTimes.length;
-
-      plankLast.textContent = formatSeconds(state.lastPlank);
-      plankBest.textContent = formatSeconds(state.bestPlank);
-      plankAverage.textContent = formatSeconds(Math.round(state.averagePlank));
-
-      // Fade status
-      plankStatus.textContent = `Saved plank: ${formatSeconds(time)} · Recalculating week...`;
-
-      // Plank impact on fatigue
-      if (time >= 90) {
-        // strong plank
-        state.fatigueScore = Math.max(state.fatigueScore - 5, 0);
-      } else if (time >= 60) {
-        // decent plank
-        state.fatigueScore = Math.max(state.fatigueScore - 2, 0);
-      } else if (time >= 30) {
-        // moderate
-        state.fatigueScore = Math.min(state.fatigueScore + 3, 100);
-      } else {
-        // weak
-        state.fatigueScore = Math.min(state.fatigueScore + 7, 100);
-      }
-
-      recalcWeek("plank");
-    });
-
-    // Weekday game/training
-    const weekdaySelect = document.getElementById("weekdaySelect");
-    const weekdayGameBtn = document.getElementById("weekdayGameBtn");
-    const weekdayTrainingBtn = document.getElementById("weekdayTrainingBtn");
-    const weekdayLogList = document.getElementById("weekdayLogList");
-
-    attachRipple(weekdayGameBtn);
-    attachRipple(weekdayTrainingBtn);
-
-    function renderWeekdayLog() {
-      if (state.weekdaySessions.length === 0) {
-        weekdayLogList.innerHTML =
-          '<div class="weekday-log-item">No weekday sessions logged yet.</div>';
-        return;
-      }
-      weekdayLogList.innerHTML = "";
-      state.weekdaySessions.forEach((s) => {
-        const div = document.createElement("div");
-        div.className = "weekday-log-item";
-        div.textContent = `${s.day}: ${s.type}`;
-        weekdayLogList.appendChild(div);
-      });
-    }
-
-    weekdayGameBtn.addEventListener("click", () => {
-      const day = weekdaySelect.value;
-      if (!day) return;
-      state.weekdaySessions.push({ day, type: "Game" });
-      state.matches.push({ day, type: "Weekday Game" });
-      state.fatigueScore = Math.min(state.fatigueScore + 8, 100);
-      renderWeekdayLog();
-      recalcWeek("weekdayGame");
-    });
-
-    weekdayTrainingBtn.addEventListener("click", () => {
-      const day = weekdaySelect.value;
-      if (!day) return;
-      state.weekdaySessions.push({ day, type: "Training" });
-      state.trainingSessions.push({ day, type: "Weekday Training" });
-      state.fatigueScore = Math.min(state.fatigueScore + 5, 100);
-      renderWeekdayLog();
-      recalcWeek("weekdayTraining");
-    });
-
-    // Meta
-    const metaFatigue = document.getElementById("metaFatigue");
-    const metaMatches = document.getElementById("metaMatches");
-    const metaTraining = document.getElementById("metaTraining");
-    const metaPlankImpact = document.getElementById("metaPlankImpact");
-
-    function updateMeta(reason) {
-      const f = state.fatigueScore;
-      let fatigueLabel = "Low";
-      if (f >= 70) fatigueLabel = "High";
-      else if (f >= 40) fatigueLabel = "Moderate";
-      metaFatigue.textContent = fatigueLabel;
-
-      metaMatches.textContent = state.matches.length.toString();
-      metaTraining.textContent = state.trainingSessions.length.toString();
-
-      if (state.lastPlank == null) {
-        metaPlankImpact.textContent = "Neutral";
-      } else {
-        if (state.lastPlank >= 90) metaPlankImpact.textContent = "Strong core boost";
-        else if (state.lastPlank >= 60) metaPlankImpact.textContent = "Positive core impact";
-        else if (state.lastPlank >= 30) metaPlankImpact.textContent = "Moderate strain";
-        else metaPlankImpact.textContent = "Core needs support";
-      }
-    }
-
-    // Weekly planner
-    const weekGrid = document.getElementById("weekGrid");
-
-    function basePlanForDay(day) {
-      switch (day) {
-        case "Saturday":
-          return {
-            type: "Match / Recovery",
-            status: "Match‑aware",
-            exercises: [
-              {
-                icon: "mobility",
-                main: "10 min light mobility",
-                sub: "Hips · ankles · hamstrings"
-              },
-              {
-                icon: "cardio",
-                main: "10 min easy walk",
-                sub: "Post‑match flush"
-              },
-              {
-                icon: "stretch",
-                main: "5 min static stretching",
-                sub: "Hamstrings · calves · quads"
-              }
-            ],
-            intensity: "Recovery"
-          };
-        case "Sunday":
-          return {
-            type: "Recovery / Light Mobility",
-            status: "Recovery‑focused",
-            exercises: [
-              {
-                icon: "mobility",
-                main: "12 min mobility flow",
-                sub: "Spine · hips · shoulders"
-              },
-              {
-                icon: "cardio",
-                main: "15 min easy cycling or walk",
-                sub: "Low‑impact cardio"
-              },
-              {
-                icon: "stretch",
-                main: "8 min stretching",
-                sub: "Full‑body release"
-              }
-            ],
-            intensity: "Recovery"
-          };
-        case "Monday":
-          return {
-            type: "Rest / Mobility",
-            status: "Reset day",
-            exercises: [
-              {
-                icon: "mobility",
-                main: "8 min gentle mobility",
-                sub: "Neck · back · hips"
-              },
-              {
-                icon: "stretch",
-                main: "6 min stretching",
-                sub: "Focus on tight areas"
-              }
-            ],
-            intensity: "Low"
-          };
-        case "Tuesday":
-          return {
-            type: "Full Body Workout",
-            status: "Strength & cardio",
-            exercises: [
-              {
-                icon: "cardio",
-                main: "20 Jumping Jacks",
-                sub: "Warm‑up · heart rate"
-              },
-              {
-                icon: "strength",
-                main: "12 Incline Push‑Ups",
-                sub: "Upper body · shoulders"
-              },
-              {
-                icon: "strength",
-                main: "15 Bodyweight Squats",
-                sub: "Legs · glutes"
-              },
-              {
-                icon: "cardio",
-                main: "30 sec High Knees",
-                sub: "Coordination · cardio"
-              }
-            ],
-            intensity: "Moderate"
-          };
-        case "Wednesday":
-          return {
-            type: "Core Workout",
-            status: "Core stability",
-            exercises: [
-              {
-                icon: "core",
-                main: "3 × 30 sec plank",
-                sub: "Front core · shoulders"
-              },
-              {
-                icon: "core",
-                main: "3 × 20 sec side plank (each side)",
-                sub: "Obliques · lateral stability"
-              },
-              {
-                icon: "core",
-                main: "12 Dead Bugs",
-                sub: "Core control · coordination"
-              }
-            ],
-            intensity: "Moderate"
-          };
-        case "Thursday":
-          return {
-            type: "HIIT Workout",
-            status: "Speed & conditioning",
-            exercises: [
-              {
-                icon: "cardio",
-                main: "6 × 20 sec fast run",
-                sub: "40 sec walk between"
-              },
-              {
-                icon: "cardio",
-                main: "4 × 15 sec lateral shuffles",
-                sub: "Agility · change of direction"
-              },
-              {
-                icon: "cardio",
-                main: "5 min cool‑down walk",
-                sub: "Heart rate down"
-              }
-            ],
-            intensity: "High"
-          };
-        case "Friday":
-          return {
-            type: "Pre‑Match Primer",
-            status: "Sharpness & mobility",
-            exercises: [
-              {
-                icon: "cardio",
-                main: "10 min easy jog",
-                sub: "Comfortable pace"
-              },
-              {
-                icon: "mobility",
-                main: "8 min dynamic stretches",
-                sub: "Leg swings · lunges"
-              },
-              {
-                icon: "core",
-                main: "2 × 20 sec plank",
-                sub: "Light activation"
-              }
-            ],
-            intensity: "Moderate"
-          };
-        default:
-          return {
-            type: "General",
-            status: "General",
-            exercises: [],
-            intensity: "Moderate"
-          };
-      }
-    }
-
-    function adjustPlanForFatigueAndSessions(day, plan) {
-      const f = state.fatigueScore;
-      const matchesOnDay = state.matches.filter((m) => m.day === day);
-      const trainingOnDay = state.trainingSessions.filter((t) => t.day === day);
-      const weekdayOnDay = state.weekdaySessions.filter((s) => s.day === day);
-
-      const isMatchDay =
-        matchesOnDay.length > 0 ||
-        (day === "Saturday" || day === "Sunday") && state.matches.length > 0;
-
-      const isTrainingDay = trainingOnDay.length > 0 || weekdayOnDay.some(s => s.type === "Training");
-
-      const newPlan = JSON.parse(JSON.stringify(plan));
-
-      if (isMatchDay) {
-        newPlan.type = "Match Day / Recovery";
-        newPlan.status = "Match‑aware recovery";
-        newPlan.exercises = [
-          {
-            icon: "mobility",
-            main: "12 min mobility",
-            sub: "Hips · ankles · hamstrings"
-          },
-          {
-            icon: "cardio",
-            main: "12 min easy walk",
-            sub: "Post‑match flush"
-          },
-          {
-            icon: "stretch",
-            main: "8 min stretching",
-            sub: "Hamstrings · calves · quads"
-          }
-        ];
-        newPlan.intensity = "Recovery";
-        return newPlan;
-      }
-
-      if (isTrainingDay) {
-        newPlan.type = "Training Day Workout";
-        newPlan.status = "Midweek load";
-        newPlan.exercises = [
-          {
-            icon: "cardio",
-            main: "15 min moderate run",
-            sub: "Pitch‑style movement"
-          },
-          {
-            icon: "mobility",
-            main: "10 min mobility",
-            sub: "Hips · knees · ankles"
-          },
-          {
-            icon: "core",
-            main: "2 × 20 sec plank",
-            sub: "Light core activation"
-          }
-        ];
-        newPlan.intensity = "Moderate";
-        return newPlan;
-      }
-
-      if (day === "Monday") {
-        const weekendMatches = state.matches.filter(
-          (m) => m.day === "Saturday" || m.day === "Sunday"
-        );
-        if (weekendMatches.length >= 2 || f >= 60) {
-          newPlan.type = "Enforced Rest / Recovery";
-          newPlan.status = "High load weekend";
-          newPlan.exercises = [
-            {
-              icon: "mobility",
-              main: "10 min gentle mobility",
-              sub: "Spine · hips · ankles"
-            },
-            {
-              icon: "stretch",
-              main: "8 min stretching",
-              sub: "Full‑body release"
-            }
-          ];
-          newPlan.intensity = "Low";
-          return newPlan;
-        }
-      }
-
-      if (day === "Tuesday") {
-        if (f >= 70) {
-          newPlan.status = "Fatigue‑aware full body";
-          newPlan.exercises = [
-            {
-              icon: "cardio",
-              main: "15 Jumping Jacks",
-              sub: "Shorter warm‑up"
-            },
-            {
-              icon: "strength",
-              main: "10 Incline Push‑Ups",
-              sub: "Reduced volume"
-            },
-            {
-              icon: "strength",
-              main: "12 Bodyweight Squats",
-              sub: "Controlled tempo"
-            },
-            {
-              icon: "cardio",
-              main: "20 sec High Knees",
-              sub: "Lower intensity"
-            }
-          ];
-          newPlan.intensity = "Moderate‑Low";
-        } else if (f <= 30) {
-          newPlan.status = "Low fatigue · stronger full body";
-          newPlan.exercises = [
-            {
-              icon: "cardio",
-              main: "25 Jumping Jacks",
-              sub: "Extended warm‑up"
-            },
-            {
-              icon: "strength",
-              main: "14 Incline Push‑Ups",
-              sub: "Extra volume"
-            },
-            {
-              icon: "strength",
-              main: "18 Bodyweight Squats",
-              sub: "Stronger legs"
-            },
-            {
-              icon: "cardio",
-              main: "40 sec High Knees",
-              sub: "Higher intensity"
-            }
-          ];
-          newPlan.intensity = "Moderate‑High";
-        }
-      }
-
-      if (day === "Wednesday") {
-        if (state.lastPlank != null) {
-          if (state.lastPlank >= 90) {
-            newPlan.status = "Strong plank · advanced core";
-            newPlan.exercises = [
-              {
-                icon: "core",
-                main: "3 × 45 sec plank",
-                sub: "Higher challenge"
-              },
-              {
-                icon: "core",
-                main: "3 × 30 sec side plank (each side)",
-                sub: "Obliques · lateral stability"
-              },
-              {
-                icon: "core",
-                main: "15 Dead Bugs",
-                sub: "Core control · coordination"
-              }
-            ];
-            newPlan.intensity = "High";
-          } else if (state.lastPlank < 30) {
-            newPlan.status = "Weak plank · supportive core";
-            newPlan.exercises = [
-              {
-                icon: "core",
-                main: "3 × 20 sec plank",
-                sub: "Build baseline"
-              },
-              {
-                icon: "core",
-                main: "2 × 15 sec side plank (each side)",
-                sub: "Gentle obliques"
-              },
-              {
-                icon: "core",
-                main: "10 Dead Bugs",
-                sub: "Controlled movement"
-              }
-            ];
-            newPlan.intensity = "Moderate‑Low";
-          }
-        }
-      }
-
-      if (day === "Thursday") {
-        if (state.lastPlank != null) {
-          if (state.lastPlank >= 90 && f <= 40) {
-            newPlan.status = "Strong core · sharper HIIT";
-            newPlan.exercises = [
-              {
-                icon: "cardio",
-                main: "8 × 20 sec fast run",
-                sub: "40 sec walk between"
-              },
-              {
-                icon: "cardio",
-                main: "6 × 20 sec lateral shuffles",
-                sub: "Agility · change of direction"
-              },
-              {
-                icon: "cardio",
-                main: "6 min cool‑down walk",
-                sub: "Heart rate down"
-              }
-            ];
-            newPlan.intensity = "High";
-          } else if (state.lastPlank < 30 || f >= 70) {
-            newPlan.status = "Fatigue / weak core · lighter HIIT";
-            newPlan.exercises = [
-              {
-                icon: "cardio",
-                main: "4 × 15 sec fast run",
-                sub: "45 sec walk between"
-              },
-              {
-                icon: "cardio",
-                main: "3 × 15 sec lateral shuffles",
-                sub: "Gentle agility"
-              },
-              {
-                icon: "cardio",
-                main: "6 min easy walk",
-                sub: "Recovery focus"
-              }
-            ];
-            newPlan.intensity = "Moderate";
-          }
-        } else if (f >= 70) {
-          newPlan.status = "High fatigue · reduced HIIT";
-          newPlan.exercises = [
-            {
-              icon: "cardio",
-              main: "4 × 15 sec fast run",
-              sub: "45 sec walk between"
-            },
-            {
-              icon: "cardio",
-              main: "3 × 15 sec lateral shuffles",
-              sub: "Gentle agility"
-            },
-            {
-              icon: "cardio",
-              main: "6 min easy walk",
-              sub: "Recovery focus"
-            }
-          ];
-          newPlan.intensity = "Moderate";
-        }
-      }
-
-      if (day === "Friday") {
-        if (f >= 70) {
-          newPlan.status = "High fatigue · light primer";
-          newPlan.exercises = [
-            {
-              icon: "cardio",
-              main: "8 min easy jog",
-              sub: "Comfortable pace"
-            },
-            {
-              icon: "mobility",
-              main: "8 min dynamic stretches",
-              sub: "Leg swings · lunges"
-            },
-            {
-              icon: "core",
-              main: "1 × 20 sec plank",
-              sub: "Light activation"
-            }
-          ];
-          newPlan.intensity = "Low‑Moderate";
-        } else if (f <= 30 && state.lastPlank != null && state.lastPlank >= 60) {
-          newPlan.status = "Low fatigue · sharp primer";
-          newPlan.exercises = [
-            {
-              icon: "cardio",
-              main: "12 min easy jog",
-              sub: "Comfortable pace"
-            },
-            {
-              icon: "mobility",
-              main: "10 min dynamic stretches",
-              sub: "Leg swings · lunges"
-            },
-            {
-              icon: "core",
-              main: "2 × 25 sec plank",
-              sub: "Confident activation"
-            }
-          ];
-          newPlan.intensity = "Moderate‑High";
-        }
-      }
-
-      return newPlan;
-    }
-
-    function iconSVG(type) {
-      switch (type) {
-        case "cardio":
-          return `
-            <svg class="exercise-icon" viewBox="0 0 24 24">
-              <path d="M13 5h-2l-1 4H7l1 2h2l-1 4H6l1 2h3l1-4h3l-1-2h-2l1-4h3l-1-2h-3z"></path>
-            </svg>
-          `;
-        case "strength":
-          return `
-            <svg class="exercise-icon" viewBox="0 0 24 24">
-              <path d="M5 10h2v4H5v-4zm12 0h2v4h-2v-4zM9 8h2v8H9V8zm4 0h2v8h-2V8z"></path>
-            </svg>
-          `;
-        case "core":
-          return `
-            <svg class="exercise-icon" viewBox="0 0 24 24">
-              <path d="M12 4C8.13 4 5 7.13 5 11s3.13 7 7 7 7-3.13 7-7-3.13-7-7-7zm0 2c2.76 0 5 2.24 5 5s-2.24 5-5 5-5-2.24-5-5 2.24-5 5-5z"></path>
-            </svg>
-          `;
-        case "mobility":
-          return `
-            <svg class="exercise-icon" viewBox="0 0 24 24">
-              <path d="M12 4l4 4-4 4-4-4 4-4zm0 8l4 4-4 4-4-4 4-4z"></path>
-            </svg>
-          `;
-        case "stretch":
-          return `
-            <svg class="exercise-icon" viewBox="0 0 24 24">
-              <path d="M7 5h10v2H7V5zm2 4h6v2H9V9zm-2 4h10v2H7v-2zm2 4h6v2H9v-2z"></path>
-            </svg>
-          `;
-        default:
-          return `
-            <svg class="exercise-icon" viewBox="0 0 24 24">
-              <path d="M5 5h14v14H5z"></path>
-            </svg>
-          `;
-      }
-    }
-
-    function intensityDotColor(intensity) {
-      switch (intensity) {
-        case "Recovery":
-          return "var(--accent-soft)";
-        case "Low":
-        case "Low‑Moderate":
-          return "var(--accent-soft)";
-        case "Moderate":
-        case "Moderate‑High":
-          return "var(--accent-strong)";
-        case "High":
-          return "var(--accent-danger)";
-        default:
-          return "var(--accent-soft)";
-      }
-    }
-
-    function renderWeek() {
-      weekGrid.innerHTML = "";
-      state.days.forEach((day) => {
-        const plan = state.dayPlans[day] || basePlanForDay(day);
-        const card = document.createElement("div");
-        card.className = "day-card";
-
-        const header = document.createElement("div");
-        header.className = "day-header ripple-container";
-
-        const headerMain = document.createElement("div");
-        headerMain.className = "day-header-main";
-
-        const dayName = document.createElement("div");
-        dayName.className = "day-name";
-        dayName.textContent = day;
-
-        const workoutTitle = document.createElement("div");
-        workoutTitle.className = "day-workout-title";
-        workoutTitle.textContent = plan.type;
-
-        headerMain.appendChild(dayName);
-        headerMain.appendChild(workoutTitle);
-
-        const headerRight = document.createElement("div");
-        headerRight.style.display = "flex";
-        headerRight.style.alignItems = "center";
-        headerRight.style.gap = "8px";
-
-        const statusPill = document.createElement("div");
-        statusPill.className = "day-status-pill";
-        const statusDot = document.createElement("span");
-        statusDot.className = "day-status-dot";
-        statusPill.appendChild(statusDot);
-        const statusText = document.createElement("span");
-        statusText.textContent = plan.status;
-        statusPill.appendChild(statusText);
-
-        const chevron = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-        chevron.setAttribute("viewBox", "0 0 24 24");
-        chevron.classList.add("day-chevron");
-        const chevronPath = document.createElementNS("http://www.w3.org/2000/svg", "path");
-        chevronPath.setAttribute("d", "M7 10l5 5 5-5z");
-        chevron.appendChild(chevronPath);
-
-        headerRight.appendChild(statusPill);
-        headerRight.appendChild(chevron);
-
-        header.appendChild(headerMain);
-        header.appendChild(headerRight);
-
-        const body = document.createElement("div");
-        body.className = "day-body";
-        const bodyInner = document.createElement("div");
-        bodyInner.className = "day-body-inner";
-
-        const ul = document.createElement("ul");
-        ul.className = "exercise-list";
-        plan.exercises.forEach((ex) => {
-          const li = document.createElement("li");
-          li.className = "exercise-item";
-          const iconWrapper = document.createElement("div");
-          iconWrapper.innerHTML = iconSVG(ex.icon);
-          const textWrapper = document.createElement("div");
-          const main = document.createElement("div");
-          main.className = "exercise-text-main";
-          main.textContent = ex.main;
-          const sub = document.createElement("div");
-          sub.className = "exercise-text-sub";
-          sub.textContent = ex.sub;
-          textWrapper.appendChild(main);
-          textWrapper.appendChild(sub);
-          li.appendChild(iconWrapper);
-          li.appendChild(textWrapper);
-          ul.appendChild(li);
-        });
-
-        const footerRow = document.createElement("div");
-        footerRow.className = "day-footer-row";
-
-        const intensityPill = document.createElement("div");
-        intensityPill.className = "intensity-pill";
-        const intensityDot = document.createElement("span");
-        intensityDot.className = "intensity-dot";
-        intensityDot.style.background = intensityDotColor(plan.intensity);
-        const intensityText = document.createElement("span");
-        intensityText.textContent = `Intensity: ${plan.intensity}`;
-        intensityPill.appendChild(intensityDot);
-        intensityPill.appendChild(intensityText);
-
-        const completionWrapper = document.createElement("div");
-        completionWrapper.className = "completion-btn completion-fade-group";
-
-        const completionButton = document.createElement("button");
-        completionButton.className = "btn btn-outline ripple-container";
-        completionButton.innerHTML = `
-          <svg class="btn-icon" viewBox="0 0 24 24">
-            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"></path>
-          </svg>
-          <span>Mark workout completed</span>
-        `;
-
-        const completionCheck = document.createElement("div");
-        completionCheck.className = "completion-check completion-fade-hidden";
-        completionCheck.innerHTML = `
-          <svg class="completion-check-icon" viewBox="0 0 24 24">
-            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"></path>
-          </svg>
-          <span>Workout completed</span>
-        `;
-
-        completionWrapper.appendChild(completionButton);
-        completionWrapper.appendChild(completionCheck);
-
-        footerRow.appendChild(intensityPill);
-        footerRow.appendChild(completionWrapper);
-
-        bodyInner.appendChild(ul);
-        bodyInner.appendChild(footerRow);
-        body.appendChild(bodyInner);
-
-        card.appendChild(header);
-        card.appendChild(body);
-
-        attachRipple(header);
-        attachRipple(completionButton);
-
-        header.addEventListener("click", () => {
-          document.querySelectorAll(".day-card").forEach((c) => {
-            if (c !== card) {
-              c.classList.remove("open");
-              const b = c.querySelector(".day-body");
-              if (b) b.style.maxHeight = "0";
-            }
-          });
-          const isOpen = card.classList.contains("open");
-          if (isOpen) {
-            card.classList.remove("open");
-            body.style.maxHeight = "0";
-          } else {
-            card.classList.add("open");
-            body.style.maxHeight = body.scrollHeight + "px";
-          }
-        });
-
-        completionButton.addEventListener("click", () => {
-          state.completion[day] = true;
-          completionButton.classList.add("completion-fade-hidden");
-          completionButton.classList.remove("completion-fade-visible");
-          completionCheck.classList.remove("completion-fade-hidden");
-          completionCheck.classList.add("completion-fade-visible");
-
-          state.fatigueScore = Math.min(state.fatigueScore + 3, 100);
-          recalcWeek("completion");
-        });
-
-        weekGrid.appendChild(card);
-      });
-    }
-
-    function recalcWeek(reason) {
-      state.days.forEach((day) => {
-        const base = basePlanForDay(day);
-        const adjusted = adjustPlanForFatigueAndSessions(day, base);
-        state.dayPlans[day] = adjusted;
-      });
-      updateMeta(reason);
-      renderWeek();
-    }
-
-    // Initial setup
-    recalcWeek("init");
-  </script>
-</body>
-</html>
+<script>
+/* -----------------------------------------------------------
+   CORE STATE
+----------------------------------------------------------- */
+const state = {
+  fatigueScore: 0, // 0–100
+  matches: [],
+  trainingSessions: [],
+  weekdaySessions: [],
+  weekend: null,
+  plankTimes: [],
+  lastPlank: null,
+  bestPlank: null,
+  averagePlank: null,
+  days: [
+    "Saturday",
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday"
+  ],
+  dayPlans: {},
+  completion: {}
+};
+
+/* -----------------------------------------------------------
+   RIPPLE EFFECT
+----------------------------------------------------------- */
+function attachRipple(el) {
+  el.addEventListener("click", function (e) {
+    const rect = el.getBoundingClientRect();
+    const ripple = document.createElement("span");
+    ripple.className = "ripple";
+    const size = Math.max(rect.width, rect.height);
+    ripple.style.width = ripple.style.height = size + "px";
+    ripple.style.left = e.clientX - rect.left - size / 2 + "px";
+    ripple.style.top = e.clientY - rect.top - size / 2 + "px";
+    el.appendChild(ripple);
+    ripple.addEventListener("animationend", () => ripple.remove());
+  });
+}
+
+/* -----------------------------------------------------------
+   PLANK TIMER
+----------------------------------------------------------- */
+let plankInterval = null;
+let plankSeconds = 0;
+
+const plankTimerDisplay = document.getElementById("plankTimerDisplay");
+const plankStatus = document.getElementById("plankStatus");
+const plankStartBtn = document.getElementById("plankStartBtn");
+const plankStopBtn = document.getElementById("plankStopBtn");
+const plankLast = document.getElementById("plankLast");
+const plankBest = document.getElementById("plankBest");
+const plankAverage = document.getElementById("plankAverage");
+
+attachRipple(plankStartBtn);
+attachRipple(plankStopBtn);
+
+function formatSeconds(sec) {
+  const m = Math.floor(sec / 60);
+  const s = sec % 60;
+  return `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+}
+
+plankStartBtn.addEventListener("click", () => {
+  if (plankInterval) return;
+  plankSeconds = 0;
+  plankTimerDisplay.textContent = "00:00";
+  plankStatus.textContent = "Plank in progress...";
+  plankStartBtn.disabled = true;
+  plankStopBtn.disabled = false;
+
+  plankInterval = setInterval(() => {
+    plankSeconds++;
+    plankTimerDisplay.textContent = formatSeconds(plankSeconds);
+  }, 1000);
+});
+
+plankStopBtn.addEventListener("click", () => {
+  if (!plankInterval) return;
+  clearInterval(plankInterval);
+  plankInterval = null;
+  plankStartBtn.disabled = false;
+  plankStopBtn.disabled = true;
+
+  const time = plankSeconds;
+  state.plankTimes.push(time);
+  state.lastPlank = time;
+  state.bestPlank = Math.max(...state.plankTimes);
+  state.averagePlank =
+    state.plankTimes.reduce((a, b) => a + b, 0) / state.plankTimes.length;
+
+  plankLast.textContent = formatSeconds(state.lastPlank);
+  plankBest.textContent = formatSeconds(state.bestPlank);
+  plankAverage.textContent = formatSeconds(Math.round(state.averagePlank));
+
+  plankStatus.textContent = `Saved plank: ${formatSeconds(time)} · Recalculating week...`;
+
+  // Plank impact on fatigue
+  if (time >= 90) {
+    state.fatigueScore = Math.max(state.fatigueScore - 5, 0);
+  } else if (time >= 60) {
+    state.fatigueScore = Math.max(state.fatigueScore - 2, 0);
+  } else if (time >= 30) {
+    state.fatigueScore = Math.min(state.fatigueScore + 3, 100);
+  } else {
+    state.fatigueScore = Math.min(state.fatigueScore + 7, 100);
+  }
+
+  recalcWeek("plank");
+});
+
+/* -----------------------------------------------------------
+   WEEKEND LOGGING (Centre, AR, Training, Recovery, Rest)
+----------------------------------------------------------- */
+const weekendLogList = document.getElementById("weekendLogList");
+
+function renderWeekendLog() {
+  weekendLogList.innerHTML = "";
+
+  if (!state.weekend) {
+    weekendLogList.innerHTML =
+      '<div class="weekday-log-item">No weekend activity logged yet.</div>';
+    return;
+  }
+
+  const sat = state.weekend.Saturday;
+  const sun = state.weekend.Sunday;
+
+  const satText = sat.rest
+    ? "Saturday: Rest"
+    : `Saturday: ${sat.centre} Centre, ${sat.ar} AR, ${sat.training} Training, ${sat.recovery} Recovery`;
+
+  const sunText = sun.rest
+    ? "Sunday: Rest"
+    : `Sunday: ${sun.centre} Centre, ${sun.ar} AR, ${sun.training} Training, ${sun.recovery} Recovery`;
+
+  weekendLogList.innerHTML = `
+    <div class="weekday-log-item">${satText}</div>
+    <div class="weekday-log-item">${sunText}</div>
+  `;
+}
+
+function calcWeekendFatigue(dayData) {
+  if (dayData.rest) return -10;
+
+  return (
+    dayData.centre * 10 +
+    dayData.ar * 6 +
+    dayData.training * 5 -
+    dayData.recovery * 5
+  );
+}
+
+document.getElementById("saveSaturdayBtn").addEventListener("click", () => {
+  const sat = {
+    centre: Number(document.getElementById("satCentre").
