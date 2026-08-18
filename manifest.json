@@ -1,7 +1,7 @@
 {
   "name": "My Daily Fitness Plan",
   "short_name": "Fitness Plan",
-  "start_url": "index.html",
+  "start_url": "/index.html",
   "display": "standalone",
   "background_color": "#111111",
   "theme_color": "#2e7d32",
