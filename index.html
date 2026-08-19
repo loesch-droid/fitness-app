@@ -693,16 +693,6 @@ function updateWeekdayLog() {
 }
 
 /* -------------------------------------------------------
-   PT TEST
-------------------------------------------------------- */
-document.getElementById("savePT").addEventListener("click", () => {
-  state.pt.pushups = Number(document.getElementById("ptPushups").value);
-  state.pt.situps = Number(document.getElementById("ptSitups").value);
-  state.pt.plank = Number(document.getElementById("ptPlank").value);
-  recalcWeek();
-});
-
-/* -------------------------------------------------------
    INTENSITY ENGINE
 ------------------------------------------------------- */
 function getIntensity(day) {
