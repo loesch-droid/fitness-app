@@ -509,6 +509,84 @@ log.innerHTML = `<div class="weekday-log-item">No weekday sessions logged yet.</
     log.appendChild(item);
   });
 }
+  /* -------------------------------------------------------
+   WEEKDAY BUTTONS (TOGGLE)
+------------------------------------------------------- */
+let selectedWeekday = null;
+
+/* -----------------------------
+   SELECT WEEKDAY (Mon–Fri)
+----------------------------- */
+document.querySelectorAll(".weekday-day-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+
+    // Remove highlight from all weekday buttons
+    document.querySelectorAll(".weekday-day-btn")
+      .forEach(b => b.classList.remove("active"));
+
+    // Highlight selected day
+    btn.classList.add("active");
+
+    // Store selected day
+    selectedWeekday = btn.dataset.day;
+  });
+});
+
+/* -----------------------------
+   SELECT ACTIVITY (Training/Game)
+----------------------------- */
+document.querySelectorAll(".weekday-activity-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+
+    // Must select a day first
+    if (!selectedWeekday) return;
+
+    const type = btn.dataset.type;
+    const isActive = btn.classList.contains("active");
+
+    // Remove highlight from all activity buttons
+    document.querySelectorAll(".weekday-activity-btn")
+      .forEach(b => b.classList.remove("active"));
+
+    if (isActive) {
+      // Toggle OFF — remove entry for that day
+      state.weekday = state.weekday.filter(w => w.day !== selectedWeekday);
+    } else {
+      // Toggle ON — highlight button
+      btn.classList.add("active");
+
+      // Remove any previous entry for that day
+      state.weekday = state.weekday.filter(w => w.day !== selectedWeekday);
+
+      // Add new entry
+      state.weekday.push({ day: selectedWeekday, type });
+    }
+
+    updateWeekdayLog();
+    recalcWeek();
+  });
+});
+
+/* -------------------------------------------------------
+   WEEKDAY LOG
+------------------------------------------------------- */
+function updateWeekdayLog() {
+  const log = document.getElementById("weekdayLogList");
+  log.innerHTML = "";
+
+  if (state.weekday.length === 0) {
+    log.innerHTML = `<div class="weekday-log-item">No weekday sessions logged yet.</div>`;
+    return;
+  }
+
+  state.weekday.forEach(entry => {
+    const item = document.createElement("div");
+    item.className = "weekday-log-item";
+    item.textContent = `${entry.day}: ${entry.type}`;
+    log.appendChild(item);
+  });
+}
+
 /* -------------------------------------------------------
    INTENSITY ENGINE
 ------------------------------------------------------- */
