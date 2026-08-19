@@ -245,8 +245,6 @@
         opacity: 0;
       }
     }
-
-    /* Plank + Weekend + Week Overview + Weekday Log styling continues in Part 2 */
   </style>
 </head>
 <body>
@@ -336,7 +334,7 @@
           </div>
         </div>
 
-        <!-- WEEKEND ACTIVITY CARD (NEW) -->
+        <!-- WEEKEND ACTIVITY CARD -->
         <div class="card weekend-card">
           <div class="card-header-row">
             <div class="card-title">Weekend Activity</div>
@@ -553,163 +551,456 @@
       </section>
     </main>
   </div>
+</body>
 <script>
-/* -----------------------------------------------------------
-   CORE STATE
------------------------------------------------------------ */
+/* -------------------------------------------------------
+   GLOBAL STATE
+------------------------------------------------------- */
 const state = {
-  fatigueScore: 0, // 0–100
-  matches: [],
-  trainingSessions: [],
-  weekdaySessions: [],
-  weekend: null,
+  fatigueScore: 0,
   plankTimes: [],
-  lastPlank: null,
-  bestPlank: null,
-  averagePlank: null,
-  days: [
-    "Saturday",
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday"
-  ],
-  dayPlans: {},
-  completion: {}
+  weekend: {
+    Saturday: { centre: 0, ar: 0, training: 0, recovery: 0, rest: false },
+    Sunday: { centre: 0, ar: 0, training: 0, recovery: 0, rest: false }
+  },
+  weekday: [],
+  completion: {},
 };
 
-/* -----------------------------------------------------------
-   RIPPLE EFFECT
------------------------------------------------------------ */
-function attachRipple(el) {
-  el.addEventListener("click", function (e) {
-    const rect = el.getBoundingClientRect();
-    const ripple = document.createElement("span");
-    ripple.className = "ripple";
-    const size = Math.max(rect.width, rect.height);
-    ripple.style.width = ripple.style.height = size + "px";
-    ripple.style.left = e.clientX - rect.left - size / 2 + "px";
-    ripple.style.top = e.clientY - rect.top - size / 2 + "px";
-    el.appendChild(ripple);
-    ripple.addEventListener("animationend", () => ripple.remove());
-  });
+/* -------------------------------------------------------
+   UTILITY
+------------------------------------------------------- */
+function clamp(v, min = 0, max = 100) {
+  return Math.max(min, Math.min(max, v));
 }
 
-/* -----------------------------------------------------------
+function formatTime(sec) {
+  const m = Math.floor(sec / 60).toString().padStart(2, "0");
+  const s = (sec % 60).toString().padStart(2, "0");
+  return `${m}:${s}`;
+}
+
+/* -------------------------------------------------------
    PLANK TIMER
------------------------------------------------------------ */
+------------------------------------------------------- */
 let plankInterval = null;
 let plankSeconds = 0;
 
-const plankTimerDisplay = document.getElementById("plankTimerDisplay");
+const plankDisplay = document.getElementById("plankTimerDisplay");
 const plankStatus = document.getElementById("plankStatus");
 const plankStartBtn = document.getElementById("plankStartBtn");
 const plankStopBtn = document.getElementById("plankStopBtn");
+
 const plankLast = document.getElementById("plankLast");
 const plankBest = document.getElementById("plankBest");
 const plankAverage = document.getElementById("plankAverage");
 
-attachRipple(plankStartBtn);
-attachRipple(plankStopBtn);
-
-function formatSeconds(sec) {
-  const m = Math.floor(sec / 60);
-  const s = sec % 60;
-  return `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
-}
-
 plankStartBtn.addEventListener("click", () => {
-  if (plankInterval) return;
   plankSeconds = 0;
-  plankTimerDisplay.textContent = "00:00";
+  plankDisplay.textContent = "00:00";
   plankStatus.textContent = "Plank in progress...";
   plankStartBtn.disabled = true;
   plankStopBtn.disabled = false;
 
   plankInterval = setInterval(() => {
     plankSeconds++;
-    plankTimerDisplay.textContent = formatSeconds(plankSeconds);
+    plankDisplay.textContent = formatTime(plankSeconds);
   }, 1000);
 });
 
 plankStopBtn.addEventListener("click", () => {
-  if (!plankInterval) return;
   clearInterval(plankInterval);
   plankInterval = null;
+
   plankStartBtn.disabled = false;
   plankStopBtn.disabled = true;
 
-  const time = plankSeconds;
-  state.plankTimes.push(time);
-  state.lastPlank = time;
-  state.bestPlank = Math.max(...state.plankTimes);
-  state.averagePlank =
-    state.plankTimes.reduce((a, b) => a + b, 0) / state.plankTimes.length;
+  state.plankTimes.push(plankSeconds);
 
-  plankLast.textContent = formatSeconds(state.lastPlank);
-  plankBest.textContent = formatSeconds(state.bestPlank);
-  plankAverage.textContent = formatSeconds(Math.round(state.averagePlank));
+  plankLast.textContent = formatTime(plankSeconds);
+  plankBest.textContent = formatTime(Math.max(...state.plankTimes));
+  plankAverage.textContent = formatTime(
+    Math.floor(state.plankTimes.reduce((a, b) => a + b, 0) / state.plankTimes.length)
+  );
 
-  plankStatus.textContent = `Saved plank: ${formatSeconds(time)} · Recalculating week...`;
+  // Fatigue impact
+  if (plankSeconds >= 90) state.fatigueScore -= 5;
+  else if (plankSeconds >= 60) state.fatigueScore -= 2;
+  else if (plankSeconds >= 30) state.fatigueScore += 3;
+  else state.fatigueScore += 7;
 
-  // Plank impact on fatigue
-  if (time >= 90) {
-    state.fatigueScore = Math.max(state.fatigueScore - 5, 0);
-  } else if (time >= 60) {
-    state.fatigueScore = Math.max(state.fatigueScore - 2, 0);
-  } else if (time >= 30) {
-    state.fatigueScore = Math.min(state.fatigueScore + 3, 100);
-  } else {
-    state.fatigueScore = Math.min(state.fatigueScore + 7, 100);
-  }
+  state.fatigueScore = clamp(state.fatigueScore);
 
-  recalcWeek("plank");
+  plankStatus.textContent = "Plank saved.";
+  recalcWeek();
 });
 
-/* -----------------------------------------------------------
-   WEEKEND LOGGING (Centre, AR, Training, Recovery, Rest)
------------------------------------------------------------ */
-const weekendLogList = document.getElementById("weekendLogList");
+/* -------------------------------------------------------
+   WEEKEND SAVE
+------------------------------------------------------- */
+function saveWeekend(day) {
+  const centre = Number(document.getElementById(day === "Saturday" ? "satCentre" : "sunCentre").value);
+  const ar = Number(document.getElementById(day === "Saturday" ? "satAR" : "sunAR").value);
+  const training = Number(document.getElementById(day === "Saturday" ? "satTraining" : "sunTraining").value);
+  const recovery = Number(document.getElementById(day === "Saturday" ? "satRecovery" : "sunRecovery").value);
+  const rest = document.getElementById(day === "Saturday" ? "satRest" : "sunRest").checked;
 
-function renderWeekendLog() {
-  weekendLogList.innerHTML = "";
+  state.weekend[day] = { centre, ar, training, recovery, rest };
 
-  if (!state.weekend) {
-    weekendLogList.innerHTML =
-      '<div class="weekday-log-item">No weekend activity logged yet.</div>';
+  // Fatigue model
+  let f = 0;
+  if (rest) f -= 10;
+  f += centre * 10;
+  f += ar * 6;
+  f += training * 5;
+  f -= recovery * 5;
+
+  state.fatigueScore = clamp(state.fatigueScore + f);
+
+  updateWeekendLog();
+  recalcWeek();
+}
+
+document.getElementById("saveSaturdayBtn").addEventListener("click", () => saveWeekend("Saturday"));
+document.getElementById("saveSundayBtn").addEventListener("click", () => saveWeekend("Sunday"));
+
+function updateWeekendLog() {
+  const log = document.getElementById("weekendLogList");
+  log.innerHTML = "";
+
+  ["Saturday", "Sunday"].forEach(day => {
+    const d = state.weekend[day];
+    const item = document.createElement("div");
+    item.className = "weekday-log-item";
+
+    if (d.rest) {
+      item.textContent = `${day}: Rest`;
+    } else {
+      item.textContent = `${day}: ${d.centre} Centre, ${d.ar} AR, ${d.training} Training, ${d.recovery} Recovery`;
+    }
+
+    log.appendChild(item);
+  });
+}
+
+/* -------------------------------------------------------
+   WEEKDAY LOGGING
+------------------------------------------------------- */
+const weekdaySelect = document.getElementById("weekdaySelect");
+const weekdayLogList = document.getElementById("weekdayLogList");
+
+document.getElementById("weekdayGameBtn").addEventListener("click", () => {
+  const day = weekdaySelect.value;
+  if (!day) return;
+
+  state.weekday.push({ day, type: "Game" });
+  state.fatigueScore = clamp(state.fatigueScore + 8);
+
+  updateWeekdayLog();
+  recalcWeek();
+});
+
+document.getElementById("weekdayTrainingBtn").addEventListener("click", () => {
+  const day = weekdaySelect.value;
+  if (!day) return;
+
+  state.weekday.push({ day, type: "Training" });
+  state.fatigueScore = clamp(state.fatigueScore + 5);
+
+  updateWeekdayLog();
+  recalcWeek();
+});
+
+function updateWeekdayLog() {
+  weekdayLogList.innerHTML = "";
+
+  if (state.weekday.length === 0) {
+    weekdayLogList.innerHTML = `<div class="weekday-log-item">No weekday sessions logged yet.</div>`;
     return;
   }
 
-  const sat = state.weekend.Saturday;
-  const sun = state.weekend.Sunday;
+  state.weekday.forEach(entry => {
+    const item = document.createElement("div");
+    item.className = "weekday-log-item";
+    item.textContent = `${entry.day}: ${entry.type}`;
+    weekdayLogList.appendChild(item);
+  });
+}
+/* -------------------------------------------------------
+   WEEK OVERVIEW META
+------------------------------------------------------- */
+const metaFatigue = document.getElementById("metaFatigue");
+const metaMatches = document.getElementById("metaMatches");
+const metaTraining = document.getElementById("metaTraining");
+const metaPlankImpact = document.getElementById("metaPlankImpact");
 
-  const satText = sat.rest
-    ? "Saturday: Rest"
-    : `Saturday: ${sat.centre} Centre, ${sat.ar} AR, ${sat.training} Training, ${sat.recovery} Recovery`;
+/* -------------------------------------------------------
+   WEEK GRID (RIGHT COLUMN)
+------------------------------------------------------- */
+const weekGrid = document.getElementById("weekGrid");
 
-  const sunText = sun.rest
-    ? "Sunday: Rest"
-    : `Sunday: ${sun.centre} Centre, ${sun.ar} AR, ${sun.training} Training, ${sun.recovery} Recovery`;
+const basePlans = {
+  Saturday: "Match / Recovery",
+  Sunday: "Recovery / Light Mobility",
+  Monday: "Rest / Mobility",
+  Tuesday: "Full Body Workout",
+  Wednesday: "Core Workout",
+  Thursday: "HIIT Workout",
+  Friday: "Pre-Match Primer",
+};
 
-  weekendLogList.innerHTML = `
-    <div class="weekday-log-item">${satText}</div>
-    <div class="weekday-log-item">${sunText}</div>
+function getIntensity(day) {
+  const f = state.fatigueScore;
+
+  if (f >= 70) return "Recovery";
+  if (f >= 40) return "Moderate";
+
+  // Plank boost
+  const best = Math.max(0, ...state.plankTimes);
+  if (best >= 90 && (day === "Wednesday" || day === "Thursday")) {
+    return "High";
+  }
+
+  return "Low";
+}
+
+function buildExercises(day, intensity) {
+  const ex = [];
+
+  const add = (icon, main, sub) => ex.push({ icon, main, sub });
+
+  if (day === "Saturday") {
+    const w = state.weekend.Saturday;
+    if (w.rest) {
+      add("🧘", "Rest Day", "Gentle mobility only");
+    } else if (w.centre > 0 || w.ar > 0) {
+      add("🔁", "Recovery Mobility", "Light stretch · breathing");
+      add("🦵", "Leg Flush", "Gentle cycling or walk");
+    } else if (w.training > 0) {
+      add("🏋️", "Training Day Workout", "Moderate load");
+    } else if (w.recovery > 0) {
+      add("🧘", "Recovery Session", "Mobility + stretch");
+    }
+  }
+
+  if (day === "Sunday") {
+    const w = state.weekend.Sunday;
+    if (w.rest) {
+      add("🧘", "Rest Day", "Gentle mobility only");
+    } else if (w.centre > 0 || w.ar > 0) {
+      add("🔁", "Recovery Mobility", "Light stretch · breathing");
+      add("🦵", "Leg Flush", "Gentle cycling or walk");
+    } else if (w.training > 0) {
+      add("🏋️", "Training Day Workout", "Moderate load");
+    } else if (w.recovery > 0) {
+      add("🧘", "Recovery Session", "Mobility + stretch");
+    }
+  }
+
+  // Weekday match/training override
+  const weekdayLoad = state.weekday.filter(w => w.day === day);
+  if (weekdayLoad.length > 0) {
+    const type = weekdayLoad[0].type;
+    if (type === "Game") {
+      add("🔁", "Match Day / Recovery", "Light mobility");
+      add("🦵", "Leg Flush", "Gentle cycling");
+    } else {
+      add("🏋️", "Training Day", "Moderate load");
+    }
+  }
+
+  // Default plan if none applied
+  if (ex.length === 0) {
+    switch (day) {
+      case "Monday":
+        add("🧘", "Rest / Mobility", "Light stretch");
+        break;
+      case "Tuesday":
+        add("🏋️", "Full Body Workout", "Strength + mobility");
+        break;
+      case "Wednesday":
+        add("💪", "Core Workout", "Plank + stability");
+        break;
+      case "Thursday":
+        add("🔥", "HIIT Workout", "Intervals + conditioning");
+        break;
+      case "Friday":
+        add("⚽", "Pre-Match Primer", "Activation + mobility");
+        break;
+    }
+  }
+
+  // Fatigue adjustments
+  if (intensity === "Recovery") {
+    return [
+      { icon: "🧘", main: "Recovery Mobility", sub: "Light stretch" },
+      { icon: "🦵", main: "Leg Flush", sub: "Gentle walk/cycle" },
+    ];
+  }
+
+  if (intensity === "Moderate") {
+    ex.push({ icon: "🧘", main: "Extra Mobility", sub: "Add 5–8 min" });
+  }
+
+  return ex;
+}
+
+function buildDayCard(day) {
+  const intensity = getIntensity(day);
+  const exercises = buildExercises(day, intensity);
+
+  const card = document.createElement("div");
+  card.className = "day-card";
+
+  const header = document.createElement("div");
+  header.className = "day-header ripple-container";
+  header.innerHTML = `
+    <div class="day-title">${day}</div>
+    <div class="day-intensity day-intensity-${intensity.toLowerCase()}">${intensity}</div>
   `;
+
+  const body = document.createElement("div");
+  body.className = "day-body";
+
+  exercises.forEach(ex => {
+    const row = document.createElement("div");
+    row.className = "exercise-row";
+    row.innerHTML = `
+      <div class="exercise-icon">${ex.icon}</div>
+      <div class="exercise-main">${ex.main}</div>
+      <div class="exercise-sub">${ex.sub}</div>
+    `;
+    body.appendChild(row);
+  });
+
+  const footer = document.createElement("div");
+  footer.className = "day-footer";
+
+  const completeBtn = document.createElement("button");
+  completeBtn.className = "btn btn-outline ripple-container";
+  completeBtn.textContent = "Complete";
+
+  const check = document.createElement("div");
+  check.className = "day-check";
+  check.textContent = "✔";
+
+  footer.appendChild(completeBtn);
+  footer.appendChild(check);
+
+  card.appendChild(header);
+  card.appendChild(body);
+  card.appendChild(footer);
+
+  // Accordion logic
+  header.addEventListener("click", () => {
+    document.querySelectorAll(".day-card").forEach(c => {
+      if (c !== card) c.classList.remove("open");
+    });
+    card.classList.toggle("open");
+  });
+
+  // Completion logic
+  completeBtn.addEventListener("click", () => {
+    completeBtn.style.opacity = 0;
+    setTimeout(() => {
+      completeBtn.style.display = "none";
+      check.style.display = "block";
+      check.style.opacity = 1;
+    }, 250);
+
+    state.completion[day] = true;
+
+    // Fatigue impact
+    if (intensity === "Recovery") state.fatigueScore -= 2;
+    else if (intensity === "High") state.fatigueScore += 3;
+
+    state.fatigueScore = clamp(state.fatigueScore);
+    recalcWeek();
+  });
+
+  return card;
+}
+/* -------------------------------------------------------
+   RIPPLE EFFECT
+------------------------------------------------------- */
+function attachRipples() {
+  document.querySelectorAll(".ripple-container").forEach(el => {
+    el.addEventListener("click", function (e) {
+      const rect = this.getBoundingClientRect();
+      const ripple = document.createElement("span");
+      ripple.className = "ripple";
+
+      const size = Math.max(rect.width, rect.height);
+      ripple.style.width = ripple.style.height = `${size}px`;
+      ripple.style.left = `${e.clientX - rect.left - size / 2}px`;
+      ripple.style.top = `${e.clientY - rect.top - size / 2}px`;
+
+      this.appendChild(ripple);
+      setTimeout(() => ripple.remove(), 600);
+    });
+  });
 }
 
-function calcWeekendFatigue(dayData) {
-  if (dayData.rest) return -10;
+/* -------------------------------------------------------
+   WEEK RECALCULATION ENGINE
+------------------------------------------------------- */
+function recalcWeek() {
+  // Fatigue label
+  const f = state.fatigueScore;
+  if (f < 40) metaFatigue.textContent = "Low";
+  else if (f < 70) metaFatigue.textContent = "Moderate";
+  else metaFatigue.textContent = "High";
 
-  return (
-    dayData.centre * 10 +
-    dayData.ar * 6 +
-    dayData.training * 5 -
-    dayData.recovery * 5
-  );
+  // Matches + training count
+  const matches = state.weekday.filter(w => w.type === "Game").length +
+                  state.weekend.Saturday.centre +
+                  state.weekend.Sunday.centre +
+                  state.weekend.Saturday.ar +
+                  state.weekend.Sunday.ar;
+
+  const training = state.weekday.filter(w => w.type === "Training").length +
+                   state.weekend.Saturday.training +
+                   state.weekend.Sunday.training;
+
+  metaMatches.textContent = matches;
+  metaTraining.textContent = training;
+
+  // Plank influence
+  const best = Math.max(0, ...state.plankTimes);
+  if (best >= 90) metaPlankImpact.textContent = "Strong core boost";
+  else if (best >= 60) metaPlankImpact.textContent = "Positive core impact";
+  else if (best >= 30) metaPlankImpact.textContent = "Moderate strain";
+  else if (best > 0) metaPlankImpact.textContent = "Core needs support";
+  else metaPlankImpact.textContent = "Neutral";
+
+  rebuildWeekGrid();
 }
 
-document.getElementById("saveSaturdayBtn").addEventListener("click", () => {
-  const sat = {
-    centre: Number(document.getElementById("satCentre").
+/* -------------------------------------------------------
+   REBUILD WEEK GRID
+------------------------------------------------------- */
+function rebuildWeekGrid() {
+  weekGrid.innerHTML = "";
+
+  const days = ["Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+
+  days.forEach(day => {
+    const card = buildDayCard(day);
+    weekGrid.appendChild(card);
+  });
+
+  attachRipples();
+}
+
+/* -------------------------------------------------------
+   INITIALIZATION
+------------------------------------------------------- */
+function init() {
+  updateWeekendLog();
+  updateWeekdayLog();
+  rebuildWeekGrid();
+  attachRipples();
+}
+
+init();
+</script>
