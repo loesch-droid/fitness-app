@@ -975,14 +975,4 @@ function buildDayCard(day) {
 
   completeBtn.addEventListener("click", () => {
     completeBtn.style.opacity = 0;
-    setTimeout(() => {
-      completeBtn.style.display = "none";
-      check.style.display = "block";
-      check.style.opacity = 1;
-    }, 250);
-
-    state.completion[day] = true;
-
-    if (state.isMaxWeek) {
-      if (day === "Monday") state.pt.pushups = Number(prompt("Enter your MAX push-ups:"));
-      if (day ===
+    setTimeout(()
