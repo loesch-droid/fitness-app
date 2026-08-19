@@ -95,6 +95,10 @@ h2 {
   background: #ffcdd2;
 }
 
+.day-intensity-high {
+  background: #bbdefb;
+}
+
 .day-body {
   display: none;
   margin-top: 10px;
@@ -185,34 +189,69 @@ h2 {
 
 <h2>Weekend Activity</h2>
 <div class="section">
+
   <h3>Saturday</h3>
+
   <div class="btn-group" data-day="Saturday" data-type="centre">
-    <button class="btn weekend-btn" data-day="Saturday" data-type="centre" data-value="1">Centre</button>
+    <button class="btn weekend-btn" data-day="Saturday" data-type="centre" data-value="1">1</button>
+    <button class="btn weekend-btn" data-day="Saturday" data-type="centre" data-value="2">2</button>
+    <button class="btn weekend-btn" data-day="Saturday" data-type="centre" data-value="3">3</button>
+    <button class="btn weekend-btn" data-day="Saturday" data-type="centre" data-value="4">4</button>
   </div>
+
   <div class="btn-group" data-day="Saturday" data-type="ar">
-    <button class="btn weekend-btn" data-day="Saturday" data-type="ar" data-value="1">AR</button>
+    <button class="btn weekend-btn" data-day="Saturday" data-type="ar" data-value="1">1</button>
+    <button class="btn weekend-btn" data-day="Saturday" data-type="ar" data-value="2">2</button>
+    <button class="btn weekend-btn" data-day="Saturday" data-type="ar" data-value="3">3</button>
+    <button class="btn weekend-btn" data-day="Saturday" data-type="ar" data-value="4">4</button>
   </div>
+
   <div class="btn-group" data-day="Saturday" data-type="training">
-    <button class="btn weekend-btn" data-day="Saturday" data-type="training" data-value="1">Training</button>
+    <button class="btn weekend-btn" data-day="Saturday" data-type="training" data-value="1">1</button>
+    <button class="btn weekend-btn" data-day="Saturday" data-type="training" data-value="2">2</button>
+    <button class="btn weekend-btn" data-day="Saturday" data-type="training" data-value="3">3</button>
+    <button class="btn weekend-btn" data-day="Saturday" data-type="training" data-value="4">4</button>
   </div>
+
   <div class="btn-group" data-day="Saturday" data-type="recovery">
-    <button class="btn weekend-btn" data-day="Saturday" data-type="recovery" data-value="1">Recovery</button>
+    <button class="btn weekend-btn" data-day="Saturday" data-type="recovery" data-value="1">1</button>
+    <button class="btn weekend-btn" data-day="Saturday" data-type="recovery" data-value="2">2</button>
+    <button class="btn weekend-btn" data-day="Saturday" data-type="recovery" data-value="3">3</button>
+    <button class="btn weekend-btn" data-day="Saturday" data-type="recovery" data-value="4">4</button>
   </div>
+
   <button class="btn weekend-btn-rest" data-day="Saturday">Rest</button>
 
   <h3>Sunday</h3>
+
   <div class="btn-group" data-day="Sunday" data-type="centre">
-    <button class="btn weekend-btn" data-day="Sunday" data-type="centre" data-value="1">Centre</button>
+    <button class="btn weekend-btn" data-day="Sunday" data-type="centre" data-value="1">1</button>
+    <button class="btn weekend-btn" data-day="Sunday" data-type="centre" data-value="2">2</button>
+    <button class="btn weekend-btn" data-day="Sunday" data-type="centre" data-value="3">3</button>
+    <button class="btn weekend-btn" data-day="Sunday" data-type="centre" data-value="4">4</button>
   </div>
+
   <div class="btn-group" data-day="Sunday" data-type="ar">
-    <button class="btn weekend-btn" data-day="Sunday" data-type="ar" data-value="1">AR</button>
+    <button class="btn weekend-btn" data-day="Sunday" data-type="ar" data-value="1">1</button>
+    <button class="btn weekend-btn" data-day="Sunday" data-type="ar" data-value="2">2</button>
+    <button class="btn weekend-btn" data-day="Sunday" data-type="ar" data-value="3">3</button>
+    <button class="btn weekend-btn" data-day="Sunday" data-type="ar" data-value="4">4</button>
   </div>
+
   <div class="btn-group" data-day="Sunday" data-type="training">
-    <button class="btn weekend-btn" data-day="Sunday" data-type="training" data-value="1">Training</button>
+    <button class="btn weekend-btn" data-day="Sunday" data-type="training" data-value="1">1</button>
+    <button class="btn weekend-btn" data-day="Sunday" data-type="training" data-value="2">2</button>
+    <button class="btn weekend-btn" data-day="Sunday" data-type="training" data-value="3">3</button>
+    <button class="btn weekend-btn" data-day="Sunday" data-type="training" data-value="4">4</button>
   </div>
+
   <div class="btn-group" data-day="Sunday" data-type="recovery">
-    <button class="btn weekend-btn" data-day="Sunday" data-type="recovery" data-value="1">Recovery</button>
+    <button class="btn weekend-btn" data-day="Sunday" data-type="recovery" data-value="1">1</button>
+    <button class="btn weekend-btn" data-day="Sunday" data-type="recovery" data-value="2">2</button>
+    <button class="btn weekend-btn" data-day="Sunday" data-type="recovery" data-value="3">3</button>
+    <button class="btn weekend-btn" data-day="Sunday" data-type="recovery" data-value="4">4</button>
   </div>
+
   <button class="btn weekend-btn-rest" data-day="Sunday">Rest</button>
 
   <h3>Weekend Log</h3>
@@ -326,7 +365,7 @@ plankStopBtn.addEventListener("click", () => {
   recalcWeek();
 });
 /* -------------------------------------------------------
-   WEEKEND BUTTONS (TOGGLE)
+   WEEKEND BUTTONS (0–4 TOGGLE)
 ------------------------------------------------------- */
 document.querySelectorAll(".btn-group").forEach(group => {
   const day = group.dataset.day;
@@ -334,6 +373,8 @@ document.querySelectorAll(".btn-group").forEach(group => {
 
   group.querySelectorAll(".weekend-btn").forEach(btn => {
     btn.addEventListener("click", () => {
+
+      const value = Number(btn.dataset.value);
       const alreadyActive = btn.classList.contains("active");
 
       group.querySelectorAll(".weekend-btn").forEach(b => b.classList.remove("active"));
@@ -342,7 +383,7 @@ document.querySelectorAll(".btn-group").forEach(group => {
         state.weekend[day][type] = 0;
       } else {
         btn.classList.add("active");
-        state.weekend[day][type] = Number(btn.dataset.value);
+        state.weekend[day][type] = value;
       }
 
       const restBtn = document.querySelector(`.weekend-btn-rest[data-day="${day}"]`);
@@ -355,6 +396,9 @@ document.querySelectorAll(".btn-group").forEach(group => {
   });
 });
 
+/* -------------------------------------------------------
+   WEEKEND REST BUTTON
+------------------------------------------------------- */
 document.querySelectorAll(".weekend-btn-rest").forEach(btn => {
   const day = btn.dataset.day;
 
@@ -380,6 +424,9 @@ document.querySelectorAll(".weekend-btn-rest").forEach(btn => {
   });
 });
 
+/* -------------------------------------------------------
+   WEEKEND LOG
+------------------------------------------------------- */
 function updateWeekendLog() {
   const log = document.getElementById("weekendLogList");
   log.innerHTML = "";
@@ -396,6 +443,69 @@ function updateWeekendLog() {
         `${day}: Centre ${d.centre}, AR ${d.ar}, Training ${d.training}, Recovery ${d.recovery}`;
     }
 
+    log.appendChild(item);
+  });
+}
+/* -------------------------------------------------------
+   WEEKDAY BUTTONS (TOGGLE)
+------------------------------------------------------- */
+let selectedWeekday = null;
+
+// Select weekday
+document.querySelectorAll(".weekday-day-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+
+    document.querySelectorAll(".weekday-day-btn")
+      .forEach(b => b.classList.remove("active"));
+
+    btn.classList.add("active");
+
+    selectedWeekday = btn.dataset.day;
+  });
+});
+
+// Select activity
+document.querySelectorAll(".weekday-activity-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+
+    if (!selectedWeekday) return;
+
+    const type = btn.dataset.type;
+    const isActive = btn.classList.contains("active");
+
+    document.querySelectorAll(".weekday-activity-btn")
+      .forEach(b => b.classList.remove("active"));
+
+    if (isActive) {
+      state.weekday = state.weekday.filter(w => w.day !== selectedWeekday);
+    } else {
+      btn.classList.add("active");
+
+      state.weekday = state.weekday.filter(w => w.day !== selectedWeekday);
+      state.weekday.push({ day: selectedWeekday, type });
+    }
+
+    updateWeekdayLog();
+    recalcWeek();
+  });
+});
+
+/* -------------------------------------------------------
+   WEEKDAY LOG
+------------------------------------------------------- */
+function updateWeekdayLog() {
+  const log = document.getElementById("weekdayLogList");
+  log.innerHTML = "";
+
+  if (state.weekday.length === 0) {
+log.innerHTML = `<div class="weekday-log-item">No weekday sessions logged yet.</div>`;
+    return;
+  }
+
+  state.weekday.forEach(entry => {
+    const item = document.createElement("div");
+    item.className = "weekday-log-item";
+    item.textContent = `${entry.day}: ${entry.type}`;
     log.appendChild(item);
   });
 }
@@ -597,7 +707,7 @@ function buildExercises(day, intensity) {
   templates[day]().forEach(t => add(t[0], t[1], t[2]));
   return ex;
 }
-/* -------------------------------------------------------
+  /* -------------------------------------------------------
    DAY CARD BUILDER
 ------------------------------------------------------- */
 function buildDayCard(day) {
