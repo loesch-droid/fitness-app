@@ -635,7 +635,6 @@ function updateWeekendLog() {
     log.appendChild(item);
   });
 }
-
 /* -------------------------------------------------------
    WEEKDAY BUTTONS
 ------------------------------------------------------- */
@@ -696,7 +695,7 @@ document.getElementById("savePT").addEventListener("click", () => {
 });
 
 /* -------------------------------------------------------
-   INTENSITY
+   INTENSITY ENGINE
 ------------------------------------------------------- */
 function getIntensity(day) {
   const f = state.fatigueScore;
@@ -713,7 +712,7 @@ function getIntensity(day) {
 }
 
 /* -------------------------------------------------------
-   MAX WEEK
+   MAX WEEK ENGINE
 ------------------------------------------------------- */
 function buildMaxWeekExercises(day) {
   const tests = {
@@ -750,12 +749,13 @@ function buildMaxWeekExercises(day) {
 }
 
 /* -------------------------------------------------------
-   ADAPTIVE CALISTHENICS ENGINE
+   ADAPTIVE MILITARY CALISTHENICS ENGINE
 ------------------------------------------------------- */
 function buildExercises(day, intensity) {
   const ex = [];
   const add = (icon, main, sub) => ex.push({ icon, main, sub });
 
+  /* PT BOOST */
   let ptBoost = 1;
 
   if (state.pt.pushups) {
@@ -776,6 +776,7 @@ function buildExercises(day, intensity) {
     else if (state.pt.plank < 30) ptBoost -= 0.2;
   }
 
+  /* INTENSITY SCALE */
   const scale = {
     Recovery: 0.6,
     Low: 1,
@@ -783,6 +784,7 @@ function buildExercises(day, intensity) {
     High: 1.6
   }[intensity] * progressionMultiplier() * ptBoost;
 
+  /* WEEKEND LOAD */
   const sat = state.weekend.Saturday;
   const sun = state.weekend.Sunday;
 
@@ -798,6 +800,7 @@ function buildExercises(day, intensity) {
     sun.recovery * 5 +
     (sun.rest ? -10 : 0);
 
+  /* WEEKDAY OVERRIDE */
   const weekdayLoad = state.weekday.filter(w => w.day === day);
   const bestPlank = Math.max(0, ...state.plankTimes);
 
@@ -913,9 +916,8 @@ function buildExercises(day, intensity) {
   templates[day]().forEach(t => add(t[0], t[1], t[2]));
   return ex;
 }
-
 /* -------------------------------------------------------
-   DAY CARD
+   DAY CARD BUILDER
 ------------------------------------------------------- */
 function buildDayCard(day) {
   const intensity = getIntensity(day);
@@ -975,4 +977,87 @@ function buildDayCard(day) {
 
   completeBtn.addEventListener("click", () => {
     completeBtn.style.opacity = 0;
-    setTimeout(()
+    setTimeout(() => {
+      completeBtn.style.display = "none";
+      check.style.display = "block";
+      check.style.opacity = 1;
+    }, 250);
+
+    state.completion[day] = true;
+
+    /* MAX WEEK RESULTS */
+    if (state.isMaxWeek) {
+      if (day === "Monday") state.pt.pushups = Number(prompt("Enter your MAX push-ups:"));
+      if (day === "Tuesday") state.pt.situps = Number(prompt("Enter your MAX sit-ups:"));
+      if (day === "Wednesday") state.pt.plank = Number(prompt("Enter your MAX plank time (sec):"));
+      if (day === "Thursday") state.pt.burpees = Number(prompt("Enter your MAX burpees:"));
+      if (day === "Friday") state.pt.circuit = Number(prompt("Enter your MAX circuit score:"));
+
+      state.progressionWeek++;
+    }
+
+    /* FATIGUE IMPACT */
+    state.fatigueScore = clamp(state.fatigueScore + 4);
+
+    recalcWeek();
+  });
+
+  return card;
+}
+
+/* -------------------------------------------------------
+   WEEK GRID BUILDER
+------------------------------------------------------- */
+function rebuildWeekGrid() {
+  const grid = document.getElementById("weekGrid");
+  grid.innerHTML = "";
+
+  const days = [
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday"
+  ];
+
+  days.forEach(day => {
+    const card = buildDayCard(day);
+    grid.appendChild(card);
+  });
+}
+
+/* -------------------------------------------------------
+   RIPPLE EFFECT
+------------------------------------------------------- */
+document.addEventListener("click", e => {
+  const container = e.target.closest(".ripple-container");
+  if (!container) return;
+
+  const rect = container.getBoundingClientRect();
+  const ripple = document.createElement("span");
+  ripple.className = "ripple";
+
+  ripple.style.left = `${e.clientX - rect.left}px`;
+  ripple.style.top = `${e.clientY - rect.top}px`;
+
+  container.appendChild(ripple);
+
+  setTimeout(() => ripple.remove(), 600);
+});
+
+/* -------------------------------------------------------
+   RECALCULATE WEEK
+------------------------------------------------------- */
+function recalcWeek() {
+  state.isMaxWeek = (state.progressionWeek % 4 === 0);
+  rebuildWeekGrid();
+}
+
+/* -------------------------------------------------------
+   INITIALIZE
+------------------------------------------------------- */
+recalcWeek();
+updateWeekendLog();
+updateWeekdayLog();
