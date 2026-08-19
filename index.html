@@ -1,90 +1,61 @@
-<!DOCTYPE html>
-<html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>Referee Weekly Fitness Planner</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <style>
     :root {
-      --bg: #0f172a;
-      --card-bg: #1e293b;
-      --card-elevated: #111827;
-      --accent: #38bdf8;
-      --accent-soft: #0ea5e9;
-      --accent-strong: #22c55e;
-      --accent-warn: #f97316;
+      --accent-soft: #93c5fd;
       --accent-danger: #ef4444;
-      --text-main: #e5e7eb;
-      --text-muted: #9ca3af;
-      --border-subtle: #334155;
-      --ripple-color: rgba(148, 163, 184, 0.35);
-      --shadow-elevated: 0 18px 28px rgba(15, 23, 42, 0.9);
-      --shadow-soft: 0 10px 18px rgba(15, 23, 42, 0.7);
-      --radius-card: 18px;
-      --radius-pill: 999px;
-      --transition-fast: 0.18s ease-out;
-      --transition-med: 0.25s ease-out;
-      --transition-slow: 0.35s ease-out;
-      --font-main: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
+      --bg: #f1f5f9;
+      --card-bg: #ffffff;
+      --text: #0f172a;
+      --subtext: #475569;
+      --border: #e2e8f0;
     }
 
     body {
-      font-family: var(--font-main);
-      background: radial-gradient(circle at top, #1f2937 0, #020617 55%, #000 100%);
-      color: var(--text-main);
-      min-height: 100vh;
-      padding: 24px 12px 32px;
-      display: flex;
-      justify-content: center;
+      margin: 0;
+      padding: 0;
+      background: var(--bg);
+      font-family: system-ui, sans-serif;
+      color: var(--text);
     }
 
     .app-shell {
-      width: 100%;
-      max-width: 960px;
-      margin: 0 auto;
+      max-width: 1100px;
+      margin: auto;
+      padding: 20px;
     }
 
     .app-header {
       margin-bottom: 20px;
-      text-align: center;
     }
 
     .app-title {
-      font-size: 1.6rem;
+      font-size: 1.8rem;
       font-weight: 700;
-      letter-spacing: 0.04em;
-      color: #f9fafb;
     }
 
     .app-subtitle {
+      font-size: 1rem;
+      color: var(--subtext);
       margin-top: 4px;
-      font-size: 0.9rem;
-      color: var(--text-muted);
     }
 
     .pill-row {
-      margin-top: 10px;
       display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
       gap: 8px;
+      margin-top: 10px;
+      flex-wrap: wrap;
     }
 
     .pill {
-      padding: 6px 12px;
-      border-radius: var(--radius-pill);
-      border: 1px solid var(--border-subtle);
-      background: rgba(15, 23, 42, 0.8);
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      display: inline-flex;
+      background: #e2e8f0;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      display: flex;
       align-items: center;
       gap: 6px;
     }
@@ -92,150 +63,173 @@
     .pill-dot {
       width: 6px;
       height: 6px;
-      border-radius: 50%;
       background: var(--accent-soft);
+      border-radius: 50%;
     }
 
     .layout-grid {
       display: grid;
-      grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
-      gap: 18px;
-      align-items: flex-start;
-    }
-
-    @media (max-width: 840px) {
-      .layout-grid {
-        grid-template-columns: minmax(0, 1fr);
-      }
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
     }
 
     .card {
-      background: radial-gradient(circle at top left, #1f2937 0, #020617 55%);
-      border-radius: var(--radius-card);
-      box-shadow: var(--shadow-elevated);
-      border: 1px solid rgba(148, 163, 184, 0.25);
-      padding: 16px 16px 14px;
-      position: relative;
-      overflow: hidden;
+      background: var(--card-bg);
+      border-radius: 12px;
+      padding: 16px;
+      border: 1px solid var(--border);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     }
 
     .card-header-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
     }
 
     .card-title {
-      font-size: 0.95rem;
+      font-size: 1.2rem;
       font-weight: 600;
-      letter-spacing: 0.03em;
-      text-transform: uppercase;
-      color: #e5e7eb;
     }
 
     .card-tag {
-      font-size: 0.7rem;
-      padding: 4px 10px;
-      border-radius: var(--radius-pill);
-      border: 1px solid rgba(148, 163, 184, 0.4);
-      color: var(--text-muted);
-      display: inline-flex;
+      display: flex;
       align-items: center;
       gap: 6px;
+      font-size: 0.8rem;
+      color: var(--subtext);
     }
 
     .card-tag-dot {
       width: 6px;
       height: 6px;
-      border-radius: 50%;
       background: var(--accent-soft);
-    }
-
-    .card-body {
-      margin-top: 6px;
-    }
-
-    .card-footer {
-      margin-top: 12px;
-      display: flex;
-      justify-content: flex-end;
-      gap: 8px;
-      align-items: center;
-    }
-
-    .small-label {
-      font-size: 0.7rem;
-      color: var(--text-muted);
-    }
-
-    .small-value {
-      font-size: 0.8rem;
-      color: var(--accent-soft);
-      font-weight: 500;
+      border-radius: 50%;
     }
 
     .btn {
-      border: none;
-      border-radius: var(--radius-pill);
-      padding: 7px 14px;
-      font-size: 0.8rem;
-      font-weight: 500;
+      border: 1px solid var(--border);
+      background: #fff;
+      padding: 6px 12px;
+      border-radius: 8px;
       cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: rgba(15, 23, 42, 0.9);
-      color: var(--text-main);
-      border: 1px solid rgba(148, 163, 184, 0.4);
-      transition: background var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .btn-primary {
-      background: linear-gradient(135deg, var(--accent-soft), var(--accent));
-      color: #0b1120;
-      border-color: transparent;
-      box-shadow: 0 10px 18px rgba(8, 47, 73, 0.7);
+      font-size: 0.85rem;
     }
 
     .btn-outline {
-      background: rgba(15, 23, 42, 0.9);
-      color: var(--accent-soft);
+      background: #fff;
     }
 
-    .btn-icon {
-      width: 14px;
-      height: 14px;
-      fill: currentColor;
+    .btn-primary {
+      background: var(--accent-soft);
+      border-color: transparent;
     }
 
-    .btn:hover {
-      transform: translateY(-1px);
-      box-shadow: var(--shadow-soft);
+    .btn-group,
+    .weekday-btn-row,
+    .weekday-day-group,
+    .weekday-activity-group {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-top: 6px;
     }
 
-    .btn-primary:hover {
-      box-shadow: 0 14px 22px rgba(8, 47, 73, 0.9);
+    .weekend-btn.active,
+    .weekday-btn.active,
+    .weekday-day-btn.active,
+    .weekday-activity-btn.active {
+      background: var(--accent-soft);
+      color: #0b1120;
+      border-color: transparent;
     }
 
-    .btn:active {
-      transform: translateY(0);
-      box-shadow: none;
+    .weekend-btn-rest.active {
+      background: var(--accent-danger);
+      color: #fff;
+      border-color: transparent;
     }
 
-    .ripple-container {
-      position: relative;
+    .weekday-log-item {
+      background: #e2e8f0;
+      padding: 6px 10px;
+      border-radius: 6px;
+      margin-top: 6px;
+      font-size: 0.85rem;
+    }
+
+    .week-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .day-card {
+      border: 1px solid var(--border);
+      background: #fff;
+      border-radius: 10px;
       overflow: hidden;
+    }
+
+    .day-header {
+      padding: 12px;
+      display: flex;
+      justify-content: space-between;
+      cursor: pointer;
+      background: #f8fafc;
+    }
+
+    .day-title {
+      font-weight: 600;
+    }
+
+    .day-intensity {
+      font-size: 0.85rem;
+      padding: 4px 8px;
+      border-radius: 6px;
+    }
+
+    .day-intensity-low { background: #d1fae5; }
+    .day-intensity-moderate { background: #fde68a; }
+    .day-intensity-high { background: #fecaca; }
+    .day-intensity-recovery { background: #bfdbfe; }
+
+    .day-body {
+      padding: 12px;
+      display: none;
+    }
+
+    .day-card.open .day-body {
+      display: block;
+    }
+
+    .exercise-row {
+      display: grid;
+      grid-template-columns: 40px 1fr 1fr;
+      padding: 6px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .day-footer {
+      padding: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .day-check {
+      display: none;
+      font-size: 1.2rem;
+      color: green;
     }
 
     .ripple {
       position: absolute;
       border-radius: 50%;
+      background: rgba(0,0,0,0.15);
       transform: scale(0);
-      animation: ripple var(--transition-slow);
-      background-color: var(--ripple-color);
+      animation: ripple 0.6s linear;
       pointer-events: none;
     }
 
@@ -249,307 +243,237 @@
 </head>
 <body>
   <div class="app-shell">
+
     <header class="app-header">
       <div class="app-title">Referee Weekly Fitness Planner</div>
-      <div class="app-subtitle">Saturday → Friday · Match‑aware · Plank‑aware · Fatigue‑aware</div>
-      <div class="pill-row">
-        <div class="pill">
-          <span class="pill-dot"></span>
-          <span>Material You elevated cards</span>
-        </div>
-        <div class="pill">
-          <span class="pill-dot"></span>
-          <span>Ripple + accordion (one open)</span>
-        </div>
-        <div class="pill">
-          <span class="pill-dot"></span>
-          <span>Plank timer updates whole week</span>
-        </div>
-        <div class="pill">
-          <span class="pill-dot"></span>
-          <span>Weekend + Weekday load</span>
-        </div>
-      </div>
+      <div class="app-subtitle">Adaptive · Military Calisthenics · Match‑Aware</div>
     </header>
 
     <main class="layout-grid">
+
       <!-- LEFT COLUMN -->
       <section>
 
-        <!-- PLANK TIMER CARD -->
-        <div class="card plank-card">
+        <!-- PLANK TIMER -->
+        <div class="card">
           <div class="card-header-row">
             <div class="card-title">Plank Timer</div>
-            <div class="card-tag">
-              <span class="card-tag-dot"></span>
-              <span>Core strength · Live impact</span>
-            </div>
           </div>
 
           <div class="card-body">
-            <div class="plank-main-row">
-              <div>
-                <div id="plankTimerDisplay" class="plank-timer-display">00:00</div>
-                <div id="plankStatus" class="plank-status">Ready when you are.</div>
-              </div>
+            <div id="plankTimerDisplay" style="font-size:2rem;font-weight:700;">00:00</div>
+            <div id="plankStatus" style="margin-top:6px;color:var(--subtext);">Ready.</div>
 
-              <div class="plank-controls">
-                <button id="plankStartBtn" class="btn btn-primary ripple-container">
-                  <svg class="btn-icon" viewBox="0 0 24 24">
-                    <path d="M8 5v14l11-7z"></path>
-                  </svg>
-                  <span>Start Plank</span>
-                </button>
-
-                <button id="plankStopBtn" class="btn btn-outline ripple-container" disabled>
-                  <svg class="btn-icon" viewBox="0 0 24 24">
-                    <path d="M7 7h4v10H7zm6 0h4v10h-4z"></path>
-                  </svg>
-                  <span>Stop & Save</span>
-                </button>
-              </div>
+            <div style="margin-top:12px;display:flex;gap:10px;">
+              <button id="plankStartBtn" class="btn btn-primary">Start</button>
+              <button id="plankStopBtn" class="btn btn-outline" disabled>Stop & Save</button>
             </div>
 
-            <div class="plank-stats-row">
-              <div class="plank-stat-pill">
-                <span class="plank-stat-label">Last plank:</span>
-                <span id="plankLast" class="plank-stat-value">–</span>
-              </div>
-
-              <div class="plank-stat-pill">
-                <span class="plank-stat-label">Best plank:</span>
-                <span id="plankBest" class="plank-stat-value">–</span>
-              </div>
-
-              <div class="plank-stat-pill">
-                <span class="plank-stat-label">Average plank:</span>
-                <span id="plankAverage" class="plank-stat-value">–</span>
-              </div>
+            <div style="margin-top:12px;">
+              <div>Last: <span id="plankLast">–</span></div>
+              <div>Best: <span id="plankBest">–</span></div>
+              <div>Average: <span id="plankAverage">–</span></div>
             </div>
-          </div>
-
-          <div class="card-footer">
-            <span class="small-label">Impact:</span>
-            <span class="small-value">Core · HIIT · Primer · Fatigue</span>
           </div>
         </div>
 
-        <!-- WEEKEND ACTIVITY CARD -->
-        <div class="card weekend-card">
+        <!-- WEEKEND -->
+        <div class="card">
           <div class="card-header-row">
             <div class="card-title">Weekend Activity</div>
-            <div class="card-tag">
-              <span class="card-tag-dot"></span>
-              <span>Centre · AR · Training · Recovery · Rest</span>
-            </div>
           </div>
 
           <div class="card-body">
 
             <!-- SATURDAY -->
             <div class="weekend-day-block">
-              <div class="card-title" style="margin-bottom:6px;">Saturday</div>
+              <div class="card-title">Saturday</div>
 
               <div class="weekend-row">
-                <label class="small-label">Centre Referee</label>
-                <input id="satCentre" type="number" min="0" max="4" value="0" class="weekday-select">
+                <label>Centre Referee</label>
+                <div class="btn-group" data-type="centre" data-day="Saturday">
+                  <button class="btn weekend-btn" data-value="1">⚽1</button>
+                  <button class="btn weekend-btn" data-value="2">⚽2</button>
+                  <button class="btn weekend-btn" data-value="3">⚽3</button>
+                  <button class="btn weekend-btn" data-value="4">⚽4</button>
+                </div>
               </div>
 
               <div class="weekend-row">
-                <label class="small-label">Assistant Referee</label>
-                <input id="satAR" type="number" min="0" max="4" value="0" class="weekday-select">
+                <label>Assistant Referee</label>
+                <div class="btn-group" data-type="ar" data-day="Saturday">
+                  <button class="btn weekend-btn" data-value="1">🏳️1</button>
+                  <button class="btn weekend-btn" data-value="2">🏳️2</button>
+                  <button class="btn weekend-btn" data-value="3">🏳️3</button>
+                  <button class="btn weekend-btn" data-value="4">🏳️4</button>
+                </div>
               </div>
 
               <div class="weekend-row">
-                <label class="small-label">Training</label>
-                <input id="satTraining" type="number" min="0" max="4" value="0" class="weekday-select">
+                <label>Training</label>
+                <div class="btn-group" data-type="training" data-day="Saturday">
+                  <button class="btn weekend-btn" data-value="1">🏋️1</button>
+                  <button class="btn weekend-btn" data-value="2">🏋️2</button>
+                  <button class="btn weekend-btn" data-value="3">🏋️3</button>
+                  <button class="btn weekend-btn" data-value="4">🏋️4</button>
+                </div>
               </div>
 
               <div class="weekend-row">
-                <label class="small-label">Recovery</label>
-                <input id="satRecovery" type="number" min="0" max="4" value="0" class="weekday-select">
+                <label>Recovery</label>
+                <div class="btn-group" data-type="recovery" data-day="Saturday">
+                  <button class="btn weekend-btn" data-value="1">🧘1</button>
+                  <button class="btn weekend-btn" data-value="2">🧘2</button>
+                  <button class="btn weekend-btn" data-value="3">🧘3</button>
+                  <button class="btn weekend-btn" data-value="4">🧘4</button>
+                </div>
               </div>
 
               <div class="weekend-row">
-                <label class="small-label">Rest</label>
-                <input id="satRest" type="checkbox">
+                <label>Rest</label>
+                <button class="btn weekend-btn-rest" data-day="Saturday">🛌 Rest</button>
               </div>
-
-              <button id="saveSaturdayBtn" class="btn btn-outline ripple-container" style="margin-top:10px;">
-                <svg class="btn-icon" viewBox="0 0 24 24">
-                  <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"></path>
-                </svg>
-                <span>Save Saturday</span>
-              </button>
             </div>
 
-            <hr style="border-color:rgba(148,163,184,0.2);margin:12px 0;">
+            <hr>
 
             <!-- SUNDAY -->
             <div class="weekend-day-block">
-              <div class="card-title" style="margin-bottom:6px;">Sunday</div>
+              <div class="card-title">Sunday</div>
 
               <div class="weekend-row">
-                <label class="small-label">Centre Referee</label>
-                <input id="sunCentre" type="number" min="0" max="4" value="0" class="weekday-select">
+                <label>Centre Referee</label>
+                <div class="btn-group" data-type="centre" data-day="Sunday">
+                  <button class="btn weekend-btn" data-value="1">⚽1</button>
+                  <button class="btn weekend-btn" data-value="2">⚽2</button>
+                  <button class="btn weekend-btn" data-value="3">⚽3</button>
+                  <button class="btn weekend-btn" data-value="4">⚽4</button>
+                </div>
               </div>
 
               <div class="weekend-row">
-                <label class="small-label">Assistant Referee</label>
-                <input id="sunAR" type="number" min="0" max="4" value="0" class="weekday-select">
+                <label>Assistant Referee</label>
+                <div class="btn-group" data-type="ar" data-day="Sunday">
+                  <button class="btn weekend-btn" data-value="1">🏳️1</button>
+                  <button class="btn weekend-btn" data-value="2">🏳️2</button>
+                  <button class="btn weekend-btn" data-value="3">🏳️3</button>
+                  <button class="btn weekend-btn" data-value="4">🏳️4</button>
+                </div>
               </div>
 
               <div class="weekend-row">
-                <label class="small-label">Training</label>
-                <input id="sunTraining" type="number" min="0" max="4" value="0" class="weekday-select">
+                <label>Training</label>
+                <div class="btn-group" data-type="training" data-day="Sunday">
+                  <button class="btn weekend-btn" data-value="1">🏋️1</button>
+                  <button class="btn weekend-btn" data-value="2">🏋️2</button>
+                  <button class="btn weekend-btn" data-value="3">🏋️3</button>
+                  <button class="btn weekend-btn" data-value="4">🏋️4</button>
+                </div>
               </div>
 
               <div class="weekend-row">
-                <label class="small-label">Recovery</label>
-                <input id="sunRecovery" type="number" min="0" max="4" value="0" class="weekday-select">
+                <label>Recovery</label>
+                <div class="btn-group" data-type="recovery" data-day="Sunday">
+                  <button class="btn weekend-btn" data-value="1">🧘1</button>
+                  <button class="btn weekend-btn" data-value="2">🧘2</button>
+                  <button class="btn weekend-btn" data-value="3">🧘3</button>
+                  <button class="btn weekend-btn" data-value="4">🧘4</button>
+                </div>
               </div>
 
               <div class="weekend-row">
-                <label class="small-label">Rest</label>
-                <input id="sunRest" type="checkbox">
+                <label>Rest</label>
+                <button class="btn weekend-btn-rest" data-day="Sunday">🛌 Rest</button>
               </div>
-
-              <button id="saveSundayBtn" class="btn btn-outline ripple-container" style="margin-top:10px;">
-                <svg class="btn-icon" viewBox="0 0 24 24">
-                  <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"></path>
-                </svg>
-                <span>Save Sunday</span>
-              </button>
             </div>
 
-            <div id="weekendLogList" class="weekday-log-list" style="margin-top:12px;">
+            <div id="weekendLogList" class="weekday-log-list">
               <div class="weekday-log-item">No weekend activity logged yet.</div>
             </div>
 
           </div>
-
-          <div class="card-footer">
-            <span class="small-label">Impact:</span>
-            <span class="small-value">Centre + AR + Training + Recovery + Rest</span>
-          </div>
         </div>
 
-        <!-- WEEK OVERVIEW CARD -->
-        <div class="card week-meta-card">
+        <!-- PT TEST -->
+        <div class="card">
           <div class="card-header-row">
-            <div class="card-title">Week Overview</div>
-            <div class="card-tag">
-              <span class="card-tag-dot"></span>
-              <span>Saturday → Friday cycle</span>
-            </div>
+            <div class="card-title">PT Test</div>
           </div>
 
           <div class="card-body">
-            <div class="meta-row">
-              <div class="meta-pill">
-                <span class="meta-label">Fatigue:</span>
-                <span id="metaFatigue" class="meta-value">Low</span>
-              </div>
-
-              <div class="meta-pill">
-                <span class="meta-label">Matches this week:</span>
-                <span id="metaMatches" class="meta-value">0</span>
-              </div>
-
-              <div class="meta-pill">
-                <span class="meta-label">Training sessions:</span>
-                <span id="metaTraining" class="meta-value">0</span>
-              </div>
-
-              <div class="meta-pill">
-                <span class="meta-label">Plank influence:</span>
-                <span id="metaPlankImpact" class="meta-value">Neutral</span>
-              </div>
+            <div class="pt-row">
+              <label>Max Push-ups</label>
+              <input id="ptPushups" type="number" class="pt-input">
             </div>
-          </div>
 
-          <div class="card-footer">
-            <span class="small-label">Engine:</span>
-            <span class="small-value">Match‑aware · Plank‑aware · Completion‑aware</span>
+            <div class="pt-row">
+              <label>Max Sit-ups</label>
+              <input id="ptSitups" type="number" class="pt-input">
+            </div>
+
+            <div class="pt-row">
+              <label>Max Plank (sec)</label>
+              <input id="ptPlank" type="number" class="pt-input">
+            </div>
+
+            <button id="savePT" class="btn btn-outline">Save PT Test</button>
           </div>
         </div>
 
-        <!-- WEEKDAY GAME/TRAINING CARD -->
-        <div class="card weekday-log-card">
+      </section>
+
+      <!-- RIGHT COLUMN -->
+      <section>
+
+        <!-- WEEKDAY -->
+        <div class="card">
           <div class="card-header-row">
-            <div class="card-title">Weekday Game / Training</div>
-            <div class="card-tag">
-              <span class="card-tag-dot"></span>
-              <span>Midweek load · Live impact</span>
-            </div>
+            <div class="card-title">Weekday Activity</div>
           </div>
 
           <div class="card-body">
-            <div class="weekday-log-row">
-              <select id="weekdaySelect" class="weekday-select">
-                <option value="">Select day</option>
-                <option value="Monday">Monday</option>
-                <option value="Tuesday">Tuesday</option>
-                <option value="Wednesday">Wednesday</option>
-                <option value="Thursday">Thursday</option>
-                <option value="Friday">Friday</option>
-              </select>
 
-              <button id="weekdayGameBtn" class="btn btn-outline ripple-container">
-                <svg class="btn-icon" viewBox="0 0 24 24">
-                  <path d="M5 5h14v14H5z"></path>
-                </svg>
-                <span>Add Game</span>
-              </button>
+            <div class="weekday-row">
+              <label>Select Day</label>
+              <div class="weekday-day-group">
+                <button class="btn weekday-day-btn" data-day="Monday">Mon</button>
+                <button class="btn weekday-day-btn" data-day="Tuesday">Tue</button>
+                <button class="btn weekday-day-btn" data-day="Wednesday">Wed</button>
+                <button class="btn weekday-day-btn" data-day="Thursday">Thu</button>
+                <button class="btn weekday-day-btn" data-day="Friday">Fri</button>
+              </div>
+            </div>
 
-              <button id="weekdayTrainingBtn" class="btn btn-outline ripple-container">
-                <svg class="btn-icon" viewBox="0 0 24 24">
-                  <path d="M12 5l4 14H8z"></path>
-                </svg>
-                <span>Add Training</span>
-              </button>
+            <div class="weekday-row">
+              <label>Activity</label>
+              <div class="weekday-activity-group">
+                <button class="btn weekday-activity-btn" data-type="Game">⚽ Game</button>
+                <button class="btn weekday-activity-btn" data-type="Training">🏋️ Training</button>
+              </div>
             </div>
 
             <div id="weekdayLogList" class="weekday-log-list">
               <div class="weekday-log-item">No weekday sessions logged yet.</div>
             </div>
-          </div>
 
-          <div class="card-footer">
-            <span class="small-label">Impact:</span>
-            <span class="small-value">Adjusts recovery · intensity · fatigue</span>
           </div>
         </div>
 
-      </section>
-      <!-- RIGHT COLUMN -->
-      <section>
+        <!-- WEEK PLANNER -->
         <div class="card">
           <div class="card-header-row">
             <div class="card-title">Weekly Planner</div>
-            <div class="card-tag">
-              <span class="card-tag-dot"></span>
-              <span>Tap a day · Ripple · Expand</span>
-            </div>
           </div>
 
           <div class="card-body">
-            <div id="weekGrid" class="week-grid">
-              <!-- Day cards injected by JS -->
-            </div>
-          </div>
-
-          <div class="card-footer">
-            <span class="small-label">Note:</span>
-            <span class="small-value">Any plank, weekend, weekday, or completion instantly recalculates the entire week.</span>
+            <div id="weekGrid" class="week-grid"></div>
           </div>
         </div>
 
-        <div class="footer-note">
-          Completion uses a smooth fade: button → green checkmark · plan updates instantly.
-        </div>
       </section>
+
     </main>
+
   </div>
 </body>
 <script>
@@ -565,6 +489,15 @@ const state = {
   },
   weekday: [],
   completion: {},
+  progressionWeek: 1,
+  isMaxWeek: false,
+  pt: {
+    pushups: null,
+    situps: null,
+    plank: null,
+    burpees: null,
+    circuit: null
+  }
 };
 
 /* -------------------------------------------------------
@@ -578,6 +511,10 @@ function formatTime(sec) {
   const m = Math.floor(sec / 60).toString().padStart(2, "0");
   const s = (sec % 60).toString().padStart(2, "0");
   return `${m}:${s}`;
+}
+
+function progressionMultiplier() {
+  return 1 + (state.progressionWeek - 1) * 0.05;
 }
 
 /* -------------------------------------------------------
@@ -623,7 +560,6 @@ plankStopBtn.addEventListener("click", () => {
     Math.floor(state.plankTimes.reduce((a, b) => a + b, 0) / state.plankTimes.length)
   );
 
-  // Fatigue impact
   if (plankSeconds >= 90) state.fatigueScore -= 5;
   else if (plankSeconds >= 60) state.fatigueScore -= 2;
   else if (plankSeconds >= 30) state.fatigueScore += 3;
@@ -636,33 +572,50 @@ plankStopBtn.addEventListener("click", () => {
 });
 
 /* -------------------------------------------------------
-   WEEKEND SAVE
+   WEEKEND BUTTONS
 ------------------------------------------------------- */
-function saveWeekend(day) {
-  const centre = Number(document.getElementById(day === "Saturday" ? "satCentre" : "sunCentre").value);
-  const ar = Number(document.getElementById(day === "Saturday" ? "satAR" : "sunAR").value);
-  const training = Number(document.getElementById(day === "Saturday" ? "satTraining" : "sunTraining").value);
-  const recovery = Number(document.getElementById(day === "Saturday" ? "satRecovery" : "sunRecovery").value);
-  const rest = document.getElementById(day === "Saturday" ? "satRest" : "sunRest").checked;
+document.querySelectorAll(".btn-group").forEach(group => {
+  const day = group.dataset.day;
+  const type = group.dataset.type;
 
-  state.weekend[day] = { centre, ar, training, recovery, rest };
+  group.querySelectorAll(".weekend-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      group.querySelectorAll(".weekend-btn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
 
-  // Fatigue model
-  let f = 0;
-  if (rest) f -= 10;
-  f += centre * 10;
-  f += ar * 6;
-  f += training * 5;
-  f -= recovery * 5;
+      state.weekend[day][type] = Number(btn.dataset.value);
 
-  state.fatigueScore = clamp(state.fatigueScore + f);
+      const restBtn = document.querySelector(`.weekend-btn-rest[data-day="${day}"]`);
+      restBtn.classList.remove("active");
+      state.weekend[day].rest = false;
 
-  updateWeekendLog();
-  recalcWeek();
-}
+      updateWeekendLog();
+      recalcWeek();
+    });
+  });
+});
 
-document.getElementById("saveSaturdayBtn").addEventListener("click", () => saveWeekend("Saturday"));
-document.getElementById("saveSundayBtn").addEventListener("click", () => saveWeekend("Sunday"));
+document.querySelectorAll(".weekend-btn-rest").forEach(btn => {
+  const day = btn.dataset.day;
+
+  btn.addEventListener("click", () => {
+    btn.classList.toggle("active");
+    const isRest = btn.classList.contains("active");
+
+    state.weekend[day].rest = isRest;
+
+    if (isRest) {
+      ["centre", "ar", "training", "recovery"].forEach(type => {
+        state.weekend[day][type] = 0;
+        const group = document.querySelector(`.btn-group[data-day="${day}"][data-type="${type}"]`);
+        group.querySelectorAll(".weekend-btn").forEach(b => b.classList.remove("active"));
+      });
+    }
+
+    updateWeekendLog();
+    recalcWeek();
+  });
+});
 
 function updateWeekendLog() {
   const log = document.getElementById("weekendLogList");
@@ -676,7 +629,7 @@ function updateWeekendLog() {
     if (d.rest) {
       item.textContent = `${day}: Rest`;
     } else {
-      item.textContent = `${day}: ${d.centre} Centre, ${d.ar} AR, ${d.training} Training, ${d.recovery} Recovery`;
+      item.textContent = `${day}: Centre ${d.centre}, AR ${d.ar}, Training ${d.training}, Recovery ${d.recovery}`;
     }
 
     log.appendChild(item);
@@ -684,38 +637,43 @@ function updateWeekendLog() {
 }
 
 /* -------------------------------------------------------
-   WEEKDAY LOGGING
+   WEEKDAY BUTTONS
 ------------------------------------------------------- */
-const weekdaySelect = document.getElementById("weekdaySelect");
-const weekdayLogList = document.getElementById("weekdayLogList");
+let selectedWeekday = null;
 
-document.getElementById("weekdayGameBtn").addEventListener("click", () => {
-  const day = weekdaySelect.value;
-  if (!day) return;
-
-  state.weekday.push({ day, type: "Game" });
-  state.fatigueScore = clamp(state.fatigueScore + 8);
-
-  updateWeekdayLog();
-  recalcWeek();
+document.querySelectorAll(".weekday-day-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".weekday-day-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    selectedWeekday = btn.dataset.day;
+  });
 });
 
-document.getElementById("weekdayTrainingBtn").addEventListener("click", () => {
-  const day = weekdaySelect.value;
-  if (!day) return;
+document.querySelectorAll(".weekday-activity-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    if (!selectedWeekday) return;
 
-  state.weekday.push({ day, type: "Training" });
-  state.fatigueScore = clamp(state.fatigueScore + 5);
+    const type = btn.dataset.type;
 
-  updateWeekdayLog();
-  recalcWeek();
+    state.weekday.push({ day: selectedWeekday, type });
+
+    if (type === "Game") state.fatigueScore = clamp(state.fatigueScore + 8);
+    else state.fatigueScore = clamp(state.fatigueScore + 5);
+
+    document.querySelectorAll(".weekday-activity-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+
+    updateWeekdayLog();
+    recalcWeek();
+  });
 });
 
 function updateWeekdayLog() {
-  weekdayLogList.innerHTML = "";
+  const log = document.getElementById("weekdayLogList");
+  log.innerHTML = "";
 
   if (state.weekday.length === 0) {
-    weekdayLogList.innerHTML = `<div class="weekday-log-item">No weekday sessions logged yet.</div>`;
+    log.innerHTML = `<div class="weekday-log-item">No weekday sessions logged yet.</div>`;
     return;
   }
 
@@ -723,39 +681,29 @@ function updateWeekdayLog() {
     const item = document.createElement("div");
     item.className = "weekday-log-item";
     item.textContent = `${entry.day}: ${entry.type}`;
-    weekdayLogList.appendChild(item);
+    log.appendChild(item);
   });
 }
-/* -------------------------------------------------------
-   WEEK OVERVIEW META
-------------------------------------------------------- */
-const metaFatigue = document.getElementById("metaFatigue");
-const metaMatches = document.getElementById("metaMatches");
-const metaTraining = document.getElementById("metaTraining");
-const metaPlankImpact = document.getElementById("metaPlankImpact");
 
 /* -------------------------------------------------------
-   WEEK GRID (RIGHT COLUMN)
+   PT TEST
 ------------------------------------------------------- */
-const weekGrid = document.getElementById("weekGrid");
+document.getElementById("savePT").addEventListener("click", () => {
+  state.pt.pushups = Number(document.getElementById("ptPushups").value);
+  state.pt.situps = Number(document.getElementById("ptSitups").value);
+  state.pt.plank = Number(document.getElementById("ptPlank").value);
+  recalcWeek();
+});
 
-const basePlans = {
-  Saturday: "Match / Recovery",
-  Sunday: "Recovery / Light Mobility",
-  Monday: "Rest / Mobility",
-  Tuesday: "Full Body Workout",
-  Wednesday: "Core Workout",
-  Thursday: "HIIT Workout",
-  Friday: "Pre-Match Primer",
-};
-
+/* -------------------------------------------------------
+   INTENSITY
+------------------------------------------------------- */
 function getIntensity(day) {
   const f = state.fatigueScore;
 
   if (f >= 70) return "Recovery";
   if (f >= 40) return "Moderate";
 
-  // Plank boost
   const best = Math.max(0, ...state.plankTimes);
   if (best >= 90 && (day === "Wednesday" || day === "Thursday")) {
     return "High";
@@ -764,90 +712,217 @@ function getIntensity(day) {
   return "Low";
 }
 
+/* -------------------------------------------------------
+   MAX WEEK
+------------------------------------------------------- */
+function buildMaxWeekExercises(day) {
+  const tests = {
+    Monday: [
+      ["🏋️", "MAX Push-ups Test", "As many reps as possible in 2 minutes"]
+    ],
+    Tuesday: [
+      ["💪", "MAX Sit-ups Test", "As many reps as possible in 2 minutes"]
+    ],
+    Wednesday: [
+      ["⏱️", "MAX Plank Test", "Hold as long as possible"]
+    ],
+    Thursday: [
+      ["🔥", "MAX Burpees Test", "As many reps as possible in 2 minutes"]
+    ],
+    Friday: [
+      ["⚡", "MAX Circuit Test", "Push-ups + Sit-ups + Squats × 3 rounds"]
+    ],
+    Saturday: [
+      ["🧘", "Recovery Mobility", "10 min"],
+      ["🚶", "Walk", "12 min"]
+    ],
+    Sunday: [
+      ["🧘", "Recovery Mobility", "10 min"],
+      ["🛌", "Rest", "Full recovery"]
+    ]
+  };
+
+  return tests[day].map(t => ({
+    icon: t[0],
+    main: t[1],
+    sub: t[2]
+  }));
+}
+
+/* -------------------------------------------------------
+   ADAPTIVE CALISTHENICS ENGINE
+------------------------------------------------------- */
 function buildExercises(day, intensity) {
   const ex = [];
-
   const add = (icon, main, sub) => ex.push({ icon, main, sub });
 
-  if (day === "Saturday") {
-    const w = state.weekend.Saturday;
-    if (w.rest) {
-      add("🧘", "Rest Day", "Gentle mobility only");
-    } else if (w.centre > 0 || w.ar > 0) {
-      add("🔁", "Recovery Mobility", "Light stretch · breathing");
-      add("🦵", "Leg Flush", "Gentle cycling or walk");
-    } else if (w.training > 0) {
-      add("🏋️", "Training Day Workout", "Moderate load");
-    } else if (w.recovery > 0) {
-      add("🧘", "Recovery Session", "Mobility + stretch");
-    }
+  let ptBoost = 1;
+
+  if (state.pt.pushups) {
+    if (state.pt.pushups >= 50) ptBoost += 0.3;
+    else if (state.pt.pushups >= 30) ptBoost += 0.15;
+    else if (state.pt.pushups < 15) ptBoost -= 0.2;
   }
 
-  if (day === "Sunday") {
-    const w = state.weekend.Sunday;
-    if (w.rest) {
-      add("🧘", "Rest Day", "Gentle mobility only");
-    } else if (w.centre > 0 || w.ar > 0) {
-      add("🔁", "Recovery Mobility", "Light stretch · breathing");
-      add("🦵", "Leg Flush", "Gentle cycling or walk");
-    } else if (w.training > 0) {
-      add("🏋️", "Training Day Workout", "Moderate load");
-    } else if (w.recovery > 0) {
-      add("🧘", "Recovery Session", "Mobility + stretch");
-    }
+  if (state.pt.situps) {
+    if (state.pt.situps >= 60) ptBoost += 0.3;
+    else if (state.pt.situps >= 40) ptBoost += 0.15;
+    else if (state.pt.situps < 20) ptBoost -= 0.2;
   }
 
-  // Weekday match/training override
+  if (state.pt.plank) {
+    if (state.pt.plank >= 120) ptBoost += 0.3;
+    else if (state.pt.plank >= 60) ptBoost += 0.15;
+    else if (state.pt.plank < 30) ptBoost -= 0.2;
+  }
+
+  const scale = {
+    Recovery: 0.6,
+    Low: 1,
+    Moderate: 1.3,
+    High: 1.6
+  }[intensity] * progressionMultiplier() * ptBoost;
+
+  const sat = state.weekend.Saturday;
+  const sun = state.weekend.Sunday;
+
+  const weekendLoad =
+    sat.centre * 10 +
+    sat.ar * 6 +
+    sat.training * 5 -
+    sat.recovery * 5 +
+    (sat.rest ? -10 : 0) +
+    sun.centre * 10 +
+    sun.ar * 6 +
+    sun.training * 5 -
+    sun.recovery * 5 +
+    (sun.rest ? -10 : 0);
+
   const weekdayLoad = state.weekday.filter(w => w.day === day);
+  const bestPlank = Math.max(0, ...state.plankTimes);
+
+  const templates = {
+    Monday: () => {
+      if (weekendLoad > 20) {
+        return [
+          ["🧘", "Recovery Mobility", "10 min"],
+          ["🚶", "Walk", "12 min"],
+          ["🦵", "Air Squats", `${Math.round(15 * scale)} reps × 2`]
+        ];
+      }
+      return [
+        ["🧘", "Mobility Flow", "8 min"],
+        ["🏋️", "Push-ups", `${Math.round(20 * scale)} reps × 3`],
+        ["💪", "Sit-ups", `${Math.round(25 * scale)} reps × 3`]
+      ];
+    },
+
+    Tuesday: () => [
+      ["🏋️", "Push-ups", `${Math.round(25 * scale)} reps × 4`],
+      ["🦵", "Squats", `${Math.round(30 * scale)} reps × 4`],
+      ["🔥", "Burpees", `${Math.round(12 * scale)} reps × 3`]
+    ],
+
+    Wednesday: () => {
+      const plankBoost = bestPlank >= 90 ? 1.4 : bestPlank >= 60 ? 1.2 : 1;
+      return [
+        ["💪", "Plank", `${Math.round(45 * scale * plankBoost)} sec × 3`],
+        ["🦿", "Flutter Kicks", `${Math.round(40 * scale)} sec × 3`],
+        ["🏋️", "Push-ups", `${Math.round(20 * scale)} reps × 4`]
+      ];
+    },
+
+    Thursday: () => [
+      ["🔥", "Burpees", `${Math.round(15 * scale)} reps × 4`],
+      ["⚡", "Mountain Climbers", `${Math.round(40 * scale)} sec × 4`],
+      ["🏃", "High Knees", `${Math.round(45 * scale)} sec × 4`]
+    ],
+
+    Friday: () => [
+      ["⚽", "Activation Jog", "10 min"],
+      ["🦵", "Squats", `${Math.round(20 * scale)} reps × 3`],
+      ["💪", "Core Circuit", `${Math.round(30 * scale)} sec × 3`]
+    ],
+
+    Saturday: () => {
+      if (sat.rest) {
+        return [
+          ["🛌", "Rest Day", "Full recovery"],
+          ["🧘", "Mobility", "8 min"]
+        ];
+      }
+      if (sat.centre > 0 || sat.ar > 0) {
+        return [
+          ["🧘", "Recovery Mobility", "10 min"],
+          ["🚶", "Walk", "12 min"]
+        ];
+      }
+      if (sat.training > 0) {
+        return [
+          ["🏋️", "Training Circuit", `${Math.round(20 * scale)} reps × 4`],
+          ["🔥", "Burpees", `${Math.round(12 * scale)} reps × 3`]
+        ];
+      }
+      return [
+        ["🧘", "Mobility", "8 min"],
+        ["🚶", "Walk", "10 min"]
+      ];
+    },
+
+    Sunday: () => {
+      if (sun.rest) {
+        return [
+          ["🛌", "Rest Day", "Full recovery"],
+          ["🧘", "Mobility", "10 min"]
+        ];
+      }
+      if (sun.centre > 0 || sun.ar > 0) {
+        return [
+          ["🧘", "Recovery Mobility", "10 min"],
+          ["🚶", "Walk", "12 min"]
+        ];
+      }
+      if (sun.training > 0) {
+        return [
+          ["🏋️", "Training Circuit", `${Math.round(20 * scale)} reps × 4`],
+          ["🔥", "Burpees", `${Math.round(12 * scale)} reps × 3`]
+        ];
+      }
+      return [
+        ["🧘", "Mobility", "10 min"],
+        ["🦵", "Light Squats", `${Math.round(15 * scale)} reps × 2`]
+      ];
+    }
+  };
+
   if (weekdayLoad.length > 0) {
     const type = weekdayLoad[0].type;
     if (type === "Game") {
-      add("🔁", "Match Day / Recovery", "Light mobility");
-      add("🦵", "Leg Flush", "Gentle cycling");
+      return [
+        { icon: "🧘", main: "Recovery Mobility", sub: "10 min" },
+        { icon: "🚶", main: "Walk", sub: "12 min" }
+      ];
     } else {
-      add("🏋️", "Training Day", "Moderate load");
+      return [
+        { icon: "🏋️", main: "Training Circuit", sub: `${Math.round(20 * scale)} reps × 4` },
+        { icon: "🔥", main: "Burpees", sub: `${Math.round(12 * scale)} reps × 3` }
+      ];
     }
   }
 
-  // Default plan if none applied
-  if (ex.length === 0) {
-    switch (day) {
-      case "Monday":
-        add("🧘", "Rest / Mobility", "Light stretch");
-        break;
-      case "Tuesday":
-        add("🏋️", "Full Body Workout", "Strength + mobility");
-        break;
-      case "Wednesday":
-        add("💪", "Core Workout", "Plank + stability");
-        break;
-      case "Thursday":
-        add("🔥", "HIIT Workout", "Intervals + conditioning");
-        break;
-      case "Friday":
-        add("⚽", "Pre-Match Primer", "Activation + mobility");
-        break;
-    }
-  }
-
-  // Fatigue adjustments
-  if (intensity === "Recovery") {
-    return [
-      { icon: "🧘", main: "Recovery Mobility", sub: "Light stretch" },
-      { icon: "🦵", main: "Leg Flush", sub: "Gentle walk/cycle" },
-    ];
-  }
-
-  if (intensity === "Moderate") {
-    ex.push({ icon: "🧘", main: "Extra Mobility", sub: "Add 5–8 min" });
-  }
-
+  templates[day]().forEach(t => add(t[0], t[1], t[2]));
   return ex;
 }
 
+/* -------------------------------------------------------
+   DAY CARD
+------------------------------------------------------- */
 function buildDayCard(day) {
   const intensity = getIntensity(day);
-  const exercises = buildExercises(day, intensity);
+
+  const exercises = state.isMaxWeek
+    ? buildMaxWeekExercises(day)
+    : buildExercises(day, intensity);
 
   const card = document.createElement("div");
   card.className = "day-card";
@@ -891,7 +966,6 @@ function buildDayCard(day) {
   card.appendChild(body);
   card.appendChild(footer);
 
-  // Accordion logic
   header.addEventListener("click", () => {
     document.querySelectorAll(".day-card").forEach(c => {
       if (c !== card) c.classList.remove("open");
@@ -899,7 +973,6 @@ function buildDayCard(day) {
     card.classList.toggle("open");
   });
 
-  // Completion logic
   completeBtn.addEventListener("click", () => {
     completeBtn.style.opacity = 0;
     setTimeout(() => {
@@ -910,97 +983,6 @@ function buildDayCard(day) {
 
     state.completion[day] = true;
 
-    // Fatigue impact
-    if (intensity === "Recovery") state.fatigueScore -= 2;
-    else if (intensity === "High") state.fatigueScore += 3;
-
-    state.fatigueScore = clamp(state.fatigueScore);
-    recalcWeek();
-  });
-
-  return card;
-}
-/* -------------------------------------------------------
-   RIPPLE EFFECT
-------------------------------------------------------- */
-function attachRipples() {
-  document.querySelectorAll(".ripple-container").forEach(el => {
-    el.addEventListener("click", function (e) {
-      const rect = this.getBoundingClientRect();
-      const ripple = document.createElement("span");
-      ripple.className = "ripple";
-
-      const size = Math.max(rect.width, rect.height);
-      ripple.style.width = ripple.style.height = `${size}px`;
-      ripple.style.left = `${e.clientX - rect.left - size / 2}px`;
-      ripple.style.top = `${e.clientY - rect.top - size / 2}px`;
-
-      this.appendChild(ripple);
-      setTimeout(() => ripple.remove(), 600);
-    });
-  });
-}
-
-/* -------------------------------------------------------
-   WEEK RECALCULATION ENGINE
-------------------------------------------------------- */
-function recalcWeek() {
-  // Fatigue label
-  const f = state.fatigueScore;
-  if (f < 40) metaFatigue.textContent = "Low";
-  else if (f < 70) metaFatigue.textContent = "Moderate";
-  else metaFatigue.textContent = "High";
-
-  // Matches + training count
-  const matches = state.weekday.filter(w => w.type === "Game").length +
-                  state.weekend.Saturday.centre +
-                  state.weekend.Sunday.centre +
-                  state.weekend.Saturday.ar +
-                  state.weekend.Sunday.ar;
-
-  const training = state.weekday.filter(w => w.type === "Training").length +
-                   state.weekend.Saturday.training +
-                   state.weekend.Sunday.training;
-
-  metaMatches.textContent = matches;
-  metaTraining.textContent = training;
-
-  // Plank influence
-  const best = Math.max(0, ...state.plankTimes);
-  if (best >= 90) metaPlankImpact.textContent = "Strong core boost";
-  else if (best >= 60) metaPlankImpact.textContent = "Positive core impact";
-  else if (best >= 30) metaPlankImpact.textContent = "Moderate strain";
-  else if (best > 0) metaPlankImpact.textContent = "Core needs support";
-  else metaPlankImpact.textContent = "Neutral";
-
-  rebuildWeekGrid();
-}
-
-/* -------------------------------------------------------
-   REBUILD WEEK GRID
-------------------------------------------------------- */
-function rebuildWeekGrid() {
-  weekGrid.innerHTML = "";
-
-  const days = ["Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
-
-  days.forEach(day => {
-    const card = buildDayCard(day);
-    weekGrid.appendChild(card);
-  });
-
-  attachRipples();
-}
-
-/* -------------------------------------------------------
-   INITIALIZATION
-------------------------------------------------------- */
-function init() {
-  updateWeekendLog();
-  updateWeekdayLog();
-  rebuildWeekGrid();
-  attachRipples();
-}
-
-init();
-</script>
+    if (state.isMaxWeek) {
+      if (day === "Monday") state.pt.pushups = Number(prompt("Enter your MAX push-ups:"));
+      if (day ===
